@@ -1,9 +1,12 @@
 package;
 
+import flixel.group.FlxSpriteGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
+
+import GridTile.EmptyTile;
 
 
 class Grid extends FlxSprite
@@ -33,11 +36,11 @@ class Grid extends FlxSprite
 
         for(x in 0...gridWidth+1)
         {
-            FlxSpriteUtil.drawLine(this, x*CELL_WIDTH, 0, x*CELL_WIDTH, gridHeight*CELL_HEIGHT, {color: 0x3fffffff, thickness: 3});  
+            FlxSpriteUtil.drawLine(this, x*CELL_WIDTH, 0, x*CELL_WIDTH, gridHeight*CELL_HEIGHT, {color: 0xffffffff, thickness: 3});  
         }
         for(y in 0...gridHeight+1)
         {
-            FlxSpriteUtil.drawLine(this, 0, y*CELL_HEIGHT, gridWidth*CELL_WIDTH, y*CELL_HEIGHT, {color: 0x3fffffff,thickness: 3});
+            FlxSpriteUtil.drawLine(this, 0, y*CELL_HEIGHT, gridWidth*CELL_WIDTH, y*CELL_HEIGHT, {color: 0xffffffff,thickness: 3});
         }
 
     }
@@ -50,7 +53,7 @@ class Grid extends FlxSprite
         {
             for(x in 0...game.width)
             {
-                var tile = new GridTile(grid, x, y);
+                var tile = new EmptyTile(grid, x, y);
                 grid.gridTiles.push(tile);
             }
         }

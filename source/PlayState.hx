@@ -26,7 +26,7 @@ class PlayState extends FlxState
         // add(background);
 		// Registry.init();
 
-		_game = new Game(30, 10);
+		_game = new Game(7, 12);
 		_grid = Grid.fromGame(_game);
 		for(tile in _grid.gridTiles)
 		{
@@ -37,22 +37,6 @@ class PlayState extends FlxState
 
 		// topControlMode = new ControlMode.SelectionControlMode(this, null);
 		// currentControlMode = topControlMode;
-		
-		if(FlxG.camera.width < Grid.CELL_WIDTH * _grid.gridWidth) {
-			FlxG.camera.minScrollX = Grid.CELL_WIDTH/2 - FlxG.camera.width/2;
-			FlxG.camera.maxScrollX = Grid.CELL_WIDTH * _grid.gridWidth - Grid.CELL_WIDTH/2 + FlxG.camera.width/2;
-		} else {
-			FlxG.camera.minScrollX = Grid.CELL_WIDTH * _grid.gridWidth/2 - FlxG.camera.width/2;
-			FlxG.camera.maxScrollX = Grid.CELL_WIDTH * _grid.gridWidth/2 + FlxG.camera.width/2;
-		}
-
-		if(FlxG.camera.height < Grid.CELL_HEIGHT * _grid.gridHeight) {
-			FlxG.camera.minScrollY = Grid.CELL_HEIGHT/2 - FlxG.camera.height/2;
-			FlxG.camera.maxScrollY = Grid.CELL_HEIGHT * _grid.gridHeight - Grid.CELL_HEIGHT/2 + FlxG.camera.height/2;
-		} else {
-			FlxG.camera.minScrollY = Grid.CELL_HEIGHT * _grid.gridHeight/2 - FlxG.camera.height/2;
-			FlxG.camera.maxScrollY = Grid.CELL_HEIGHT * _grid.gridHeight/2 + FlxG.camera.height/2;
-		}
 
 		FlxG.camera.focusOn(new FlxPoint(Grid.CELL_WIDTH * _grid.gridWidth/2, Grid.CELL_HEIGHT * _grid.gridHeight/2));
 
