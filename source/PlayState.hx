@@ -13,7 +13,6 @@ import flixel.addons.display.FlxBackdrop;
 class PlayState extends FlxState
 {
 
-	public var _game:Game;
     public var _grid:Grid;
 
     // var background:FlxBackdrop;
@@ -26,11 +25,13 @@ class PlayState extends FlxState
         // add(background);
 		// Registry.init();
 
-		_game = new Game(7, 12);
-		_grid = Grid.fromGame(_game);
+		_grid = new Grid(7, 12);
 		for(tile in _grid.gridTiles)
 		{
-			add(tile);
+			if (tile != null) 
+			{
+				add(tile);
+			}
 		}
 		
 		add(_grid);
