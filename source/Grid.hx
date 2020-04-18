@@ -1,11 +1,12 @@
 package;
 
-import flixel.group.FlxSpriteGroup;
+import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 
+import GridTile.LetterTile;
 
 class Grid extends FlxSprite
 {
@@ -21,10 +22,12 @@ class Grid extends FlxSprite
     public var cellWidth:Int = Registry.GRID_SIZE;
 
     public var gridTiles:Array<GridTile>;
-    public var fallingTiles:FlxTypedSpriteGroup<GridTile>;
+    public var fallingTiles:FlxTypedGroup<GridTile>;
 
-    public function new(width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
+    public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
+        this.playState = playState;
+
         gridWidth = width;
         gridHeight = height;
 
@@ -53,6 +56,16 @@ class Grid extends FlxSprite
             FlxSpriteUtil.drawLine(this, 0, y*CELL_HEIGHT, gridWidth*CELL_WIDTH, y*CELL_HEIGHT, {color: 0xffffffff,thickness: 3});
         }
 
+        fallingTiles = new FlxTypedGroup<GridTile>();
+
+        addFallingTile(0);
+    }
+
+    public function addFallingTile(column:Int)
+    {
+        var tile:GridTile = new LetterTile(this, column, 0, "A");
+        fallingTiles.add(tile);
+        playState.add(tile);
     }
 
     public function getSquare(dx:Float, dy:Float):Int
@@ -64,18 +77,23 @@ class Grid extends FlxSprite
         return y*gridWidth + x;
     }
 
-    public function getCorner(square:Int):FlxPoint
+    public function getTile(dx:Float, dy:Float):GridTile
     {
-        var corner:FlxPoint = new FlxPoint();
-        corner.x = x + (square%gridWidth)*CELL_WIDTH;
-        corner.y = y + Std.int(square/gridWidth)*CELL_HEIGHT;
-
-        return corner;
+        return gridTiles[getSquare(dx, dy)];
     }
+
+    // public function getCorner(square:Int):FlxPoint
+    // {
+    //     var corner:FlxPoint = new FlxPoint();
+    //     corner.x = x + (square%gridWidth)*CELL_WIDTH;
+    //     corner.y = y + Std.int(square/gridWidth)*CELL_HEIGHT;
+
+    //     return corner;
+    // }
 
     public inline function squareId(x:Int, y:Int):Int
     {
-        return x + y*gridWidth;
+        return y*gridWidth + x;
     }
 
     public function columnTop(x:Int) 
