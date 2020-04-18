@@ -7,6 +7,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 
 import GridTile.EmptyTile;
+import GridTile.LetterTile;
 
 
 class Grid extends FlxSprite
@@ -21,6 +22,9 @@ class Grid extends FlxSprite
     public var cellWidth:Int = Registry.GRID_SIZE;
 
     public var gridTiles:Array<GridTile>;
+
+    // # TODO: modify square selection to only use letter tiles
+    public var selectedPath:Array<GridTile>;
 
     public function new(width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
@@ -53,7 +57,7 @@ class Grid extends FlxSprite
         {
             for(x in 0...game.width)
             {
-                var tile = new EmptyTile(grid, x, y);
+                var tile = new LetterTile(grid, x, y);
                 grid.gridTiles.push(tile);
             }
         }
@@ -78,4 +82,27 @@ class Grid extends FlxSprite
         return corner;
     }
 
+    public function extendSelectedPath(square:Int):Void
+    {
+        if (selectedPath.length == 0) 
+        {
+            selectedPath.push(gridTiles[square]);
+        } 
+        else
+        {
+            var lastPathTile:GridTile = selectedPath[selectedPath.length-1];
+            var lastPathTileX:Int = lastPathTile.gridX;
+            var lastPathTileY:Int = lastPathTile.gridY;
+
+            var currentTile:GridTile = gridTiles[square];
+            var currentTileX:Int = currentTile.gridX;
+            var currentTileY:Int = currentTile.gridY;
+            // Make sure that the tile is exactly 
+            if (lastPathTileX == currentTileX && lastPathTileY == currentTileY)
+            {
+                return;
+            }
+            
+        }
+    }
 }

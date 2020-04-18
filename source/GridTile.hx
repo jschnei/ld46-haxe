@@ -11,6 +11,7 @@ class GridTile extends FlxSprite
     public var grid:Grid;
     public var gridX:Int;
     public var gridY:Int;
+    public var selected:Bool;
     
     public function new(grid:Grid, gridX:Int, gridY:Int)
     {
@@ -20,7 +21,6 @@ class GridTile extends FlxSprite
 
         var X = grid.x + Grid.CELL_WIDTH * gridX;
         var Y = grid.y + Grid.CELL_HEIGHT * gridY;
-
         super(X, Y);
         // makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.YELLOW);
         // switch(type)
@@ -37,8 +37,6 @@ class GridTile extends FlxSprite
         //         loadGraphic(AssetPaths.grass_small__png);
         // }
     }
-
-
 }
 
 class EmptyTile extends GridTile 
@@ -82,5 +80,13 @@ class LetterTile extends GridTile
         //     default:
         //         loadGraphic(AssetPaths.grass_small__png);
         // }
+    }
+
+    override public function update(elapsed:Float):Void 
+    {
+        if (selected)
+            color = 0xff0000;
+        else
+            color = 0xffffff;
     }
 }
