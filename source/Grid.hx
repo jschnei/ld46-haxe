@@ -6,12 +6,11 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 
-import GridTile.EmptyTile;
-import GridTile.LetterTile;
-
 
 class Grid extends FlxSprite
 {
+    public var playState:PlayState;
+
     public static var CELL_WIDTH:Int = 64;
     public static var CELL_HEIGHT:Int = 64;
 
@@ -22,8 +21,8 @@ class Grid extends FlxSprite
     public var cellWidth:Int = Registry.GRID_SIZE;
 
     public var gridTiles:Array<GridTile>;
+    public var fallingTiles:FlxTypedSpriteGroup<GridTile>;
 
-    // # TODO: modify square selection to only use letter tiles
     public var selectedPath:Array<GridTile>;
 
     public function new(width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
@@ -32,6 +31,15 @@ class Grid extends FlxSprite
         gridHeight = height;
 
         gridTiles = new Array<GridTile>();
+
+        for(y in 0...height)
+        {
+            for(x in 0...width)
+            {
+                // var tile = new EmptyTile(this, x, y);
+                gridTiles.push(null);
+            }
+        }
 
         super(X, Y);
         makeGraphic(gridWidth*CELL_WIDTH+1, 
@@ -47,21 +55,6 @@ class Grid extends FlxSprite
             FlxSpriteUtil.drawLine(this, 0, y*CELL_HEIGHT, gridWidth*CELL_WIDTH, y*CELL_HEIGHT, {color: 0xffffffff,thickness: 3});
         }
 
-    }
-
-    public static function fromGame(game:Game):Grid
-    {
-        var grid = new Grid(game.width, game.height);
-
-        for(y in 0...game.height)
-        {
-            for(x in 0...game.width)
-            {
-                var tile = new LetterTile(grid, x, y);
-                grid.gridTiles.push(tile);
-            }
-        }
-        return grid;
     }
 
     public function getSquare(dx:Float, dy:Float):Int
@@ -80,6 +73,23 @@ class Grid extends FlxSprite
         corner.y = y + Std.int(square/gridWidth)*CELL_HEIGHT;
 
         return corner;
+    }
+
+    public inline function squareId(x:Int, y:Int):Int
+    {
+        return x + y*gridWidth;
+    }
+
+    public function columnTop(x:Int) 
+    {
+        for(y in 0...gridHeight)
+        {
+            if (gridTiles[squareId(x, y)] != null) {
+                return y;
+            }
+        }
+
+        return gridHeight;
     }
 
     public function extendSelectedPath(square:Int):Void
