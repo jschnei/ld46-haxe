@@ -275,6 +275,7 @@ class Grid extends FlxSprite
 
         if (Registry.isWord(getCurrentWord().toLowerCase()))
         {
+            NetworkingUtils.ws.sendString(getCurrentWord());
             for (gridTile in selectedPath)
             {
                 removeTile(gridTile);
