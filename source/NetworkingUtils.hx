@@ -1,5 +1,9 @@
 //import haxe.net.WebSocket;
+import haxe.DynamicAccess;
+import haxe.Json;
+
 import js.html.WebSocket;
+
 
 class NetworkingUtils {
     public static var ws:WebSocket;
@@ -10,12 +14,12 @@ class NetworkingUtils {
         trace('testing!');
         
         // ws = WebSocket.create("ws://echo.websocket.org", ['echo-protocol'], false);
-        ws = new WebSocket("ws://echo.websocket.org");
-        // ws = new WebSocket("ws://localhost:9999/");
+        // ws = new WebSocket("ws://echo.websocket.org");
+        ws = new WebSocket("ws://localhost:9999/");
         ws.onopen = function() 
         {
             trace('open!');
-            ws.send('hello friend!');
+            // ws.send('hello friend!');
         };
         ws.onmessage = function(message) 
         {
@@ -29,11 +33,14 @@ class NetworkingUtils {
         }
     }
 
-    public static function sendMessage(message: String)
+    public static function sendMessage(type: String, message: String)
     {
         if (isOpen)
         {
-            ws.send(message);
+            var messageBlob:Dynamic<String> = {};
+            messageBlob.type = type;
+            messageBlob.message = message;
+            ws.send(Json.stringify(messageBlob));
         }
     }
 }
