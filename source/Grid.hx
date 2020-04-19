@@ -10,8 +10,10 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
+import Date;
 using Lambda;
 import GridTile.LetterTile;
+import Std;
 
 class Grid extends FlxSprite
 {
@@ -46,8 +48,8 @@ class Grid extends FlxSprite
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
-
-        rand = new FlxRandom(322);
+        trace(Date.now());
+        rand = new FlxRandom(Std.int(Date.now().getTime()));
         timer = 0.0;
 
         this.playState = playState;
@@ -89,7 +91,7 @@ class Grid extends FlxSprite
 
         selectSound = FlxG.sound.load(AssetPaths.select__wav);
         unselectSound = FlxG.sound.load(AssetPaths.unselect__wav);
-        clearSound = FlxG.sound.load(AssetPaths.clear__wav);
+        clearSound = FlxG.sound.load(AssetPaths.clear__wav, .1);
         badWordSound = FlxG.sound.load(AssetPaths.badword__wav, .5);
     }
 
