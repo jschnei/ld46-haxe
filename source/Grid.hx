@@ -1,12 +1,13 @@
 package;
 
-import flixel.group.FlxGroup;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
+import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
-import flixel.math.FlxRandom;
 
 import GridTile.LetterTile;
 
@@ -27,6 +28,7 @@ class Grid extends FlxSprite
     public var fallingTiles:FlxTypedGroup<GridTile>;
 
     public var selectedPath:Array<GridTile>;
+    public var currentWordText:FlxText;
 
     public var rand:FlxRandom;
     public var timer:Float;
@@ -77,14 +79,6 @@ class Grid extends FlxSprite
 
     override public function update(elapsed:Float):Void
     {
-        for (gridTile in gridTiles)
-        {
-            if (gridTile != null)
-            {
-                gridTile.selected = false;
-            }
-        }
-
         for (gridTile in selectedPath)
         {
             gridTile.selected = true;
@@ -205,6 +199,10 @@ class Grid extends FlxSprite
 
     public function clearSelectedPath():Void
     {
+        for (gridTile in selectedPath)
+        {
+            gridTile.selected = false;
+        }
         selectedPath = [];
     }
 
