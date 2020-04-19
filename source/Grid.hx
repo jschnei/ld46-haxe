@@ -31,6 +31,9 @@ class Grid extends FlxSprite
     public var rand:FlxRandom;
     public var timer:Float;
 
+    public static var NEW_TILE_FREQ = 1.0;
+    public var new_tile_timer:Float = 0;
+
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
@@ -70,12 +73,10 @@ class Grid extends FlxSprite
         }
 
         fallingTiles = new FlxTypedGroup<GridTile>();
-
     }
 
     override public function update(elapsed:Float):Void
     {
-        timer = timer + elapsed;
         for (gridTile in gridTiles)
         {
             if (gridTile != null)
@@ -88,9 +89,12 @@ class Grid extends FlxSprite
         {
             gridTile.selected = true;
         }
-        if (timer > Registry.TILE_PERIOD) {
-            timer = timer - Registry.TILE_PERIOD;
+
+        new_tile_timer += elapsed;
+        if (new_tile_timer > NEW_TILE_FREQ) 
+        {
             addFallingTile(rand.int(0,6));
+            new_tile_timer = 0;
         }
     }
 
@@ -114,6 +118,8 @@ class Grid extends FlxSprite
 
         // align to grid
         gridTile.setPosition(x + Grid.CELL_WIDTH * gridX, y + Grid.CELL_HEIGHT * gridY);
+        gridTile.gridX = gridX;
+        gridTile.gridY = gridY;
 
         // insert in gridTiles
         gridTiles[squareId(gridX, gridY)] = gridTile;
@@ -164,6 +170,7 @@ class Grid extends FlxSprite
 
     public function extendSelectedPath(dx:Float, dy:Float):Void
     {
+        // logGridTiles();
         var selectedTile:GridTile = getTile(dx, dy);
         if (selectedTile == null)
         {
@@ -198,5 +205,15 @@ class Grid extends FlxSprite
     public function clearSelectedPath():Void
     {
         selectedPath = [];
+    }
+
+    public function logGridTiles():Void
+    {
+        trace("logging tiles");
+        for (gridTile in gridTiles)
+        {
+            if (gridTile != null)
+                trace("x: " + gridTile.gridX + ", y: " + gridTile.gridY + ", letter: " + cast (gridTile, LetterTile).letter);
+        }
     }
 }

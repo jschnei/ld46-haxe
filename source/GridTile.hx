@@ -66,7 +66,8 @@ class GridTile extends FlxSpriteGroup
 }
 
 class LetterTile extends GridTile 
-{    
+{
+    public var letter:String;    
     var letterText:FlxText; 
     var letterTileSprite:FlxSprite;
     public function new(grid:Grid, gridX:Int, gridY:Int, letter:String)
