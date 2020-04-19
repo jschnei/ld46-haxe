@@ -88,8 +88,8 @@ class Grid extends FlxSprite
         {
             gridTile.selected = true;
         }
-        if (timer > 1) {
-            timer = timer - 1;
+        if (timer > Registry.TILE_PERIOD) {
+            timer = timer - Registry.TILE_PERIOD;
             addFallingTile(rand.int(0,6));
         }
     }
