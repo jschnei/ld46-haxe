@@ -59,6 +59,7 @@ class Grid extends FlxSprite
         fallingTiles = new FlxTypedGroup<GridTile>();
 
         addFallingTile(0);
+        addFallingTile(0);
     }
 
     public function addFallingTile(column:Int)
@@ -66,6 +67,22 @@ class Grid extends FlxSprite
         var tile:GridTile = new LetterTile(this, column, 0, "A");
         fallingTiles.add(tile);
         playState.add(tile);
+    }
+
+    public function insertTile(gridTile:GridTile, gridX:Int, gridY:Int)
+    {
+        // stop tile
+        gridTile.velocity.y = 0;
+        gridTile.falling = false;
+
+        // align to grid
+        gridTile.setPosition(x + Grid.CELL_WIDTH * gridX, y + Grid.CELL_HEIGHT * gridY);
+
+        // insert in gridTiles
+        gridTiles[squareId(gridX, gridY)] = gridTile;
+
+        // remove from fallingTiles
+        fallingTiles.remove(gridTile);
     }
 
     public function getSquare(dx:Float, dy:Float):Int
