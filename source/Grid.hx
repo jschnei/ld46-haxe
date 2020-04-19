@@ -254,7 +254,7 @@ class Grid extends FlxSprite
         return (Math.abs(fracX) + Math.abs(fracY) <= .5);
     }
 
-    public function extendSelectedPath(dx:Float, dy:Float):Void
+    public function onMouseHold(dx:Float, dy:Float):Void
     {
         // logGridTiles();
         var selectedTile:GridTile = getTile(dx, dy);

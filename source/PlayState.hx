@@ -56,7 +56,7 @@ class PlayState extends FlxState
 			var dx = FlxG.mouse.x - _grid.x;
 			var dy = FlxG.mouse.y - _grid.y;
 
-			_grid.extendSelectedPath(dx, dy);
+			_grid.onMouseHold(dx, dy);
 		}
 		if(FlxG.mouse.justReleased)
 		{
