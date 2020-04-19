@@ -7,11 +7,11 @@ class Randomizer
     public var rand:FlxRandom;
     public var grid:Grid;
 
-    public var COLUMN_FREQS:Array<Int> = [0, 0, 0, 0, 0,
-                                          1, 1, 1, 1, 1, 1, 
-                                          2, 2, 2, 2, 2, 2, 2,
-                                          3, 3, 3, 3, 3, 3,
-                                          4, 4 ,4, 4, 4];
+    public var columnFreqs:Array<Int> = [0, 0, 0, 0, 0,
+                                         1, 1, 1, 1, 1, 1, 
+                                         2, 2, 2, 2, 2, 2, 2,
+                                         3, 3, 3, 3, 3, 3,
+                                         4, 4 ,4, 4, 4];
     var currentBag_:Array<Int>;
 
     public function new(grid:Grid)
@@ -36,22 +36,7 @@ class Randomizer
 
     private function generateNewBag():Void
     {
-        var columnBag = COLUMN_FREQS.copy();
-        currentBag_ = shuffle(columnBag);
+        rand.shuffle(columnFreqs);
+        currentBag_ = columnFreqs.copy();
     }
-
-    // Copy-pasted Fisher-Yates shuffle because Haxe doesn't have a built-in one lol.
-    public function shuffle<T>(arr:Array<T>):Array<T>
-	{
-		if (arr!=null) {
-			for (i in 0...arr.length) {
-				var j = rand.int(0, arr.length - 1);
-				var a = arr[i];
-				var b = arr[j];
-				arr[i] = b;
-				arr[j] = a;
-			}
-		}
-		return arr;
-	}
 }
