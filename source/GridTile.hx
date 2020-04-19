@@ -86,9 +86,9 @@ class LetterTile extends GridTile
     public override function update(elapsed:Float)
     {
         if (selected)
-            color = 0xff0000;
+            letterTileSprite.color = 0xff0000;
         else
-            color = 0xffffff;
+            letterTileSprite.color = 0xffffff;
         super.update(elapsed);
     }
 }
