@@ -128,6 +128,37 @@ class Grid extends FlxSprite
         fallingTiles.remove(gridTile);
     }
 
+    public function removeTile(gridTile:GridTile)
+    {
+        if (gridTile.falling)
+        {
+            fallingTiles.remove(gridTile);
+            gridTile.kill();
+        } else {
+            var row = gridTile.gridY;
+            var column = gridTile.gridX;
+            
+            gridTiles[squareId(gridTile.gridX, gridTile.gridY)] = null;
+            gridTile.kill();
+
+            // make other letters fall
+            for (y in 0...row)
+            {
+                if (gridTiles[squareId(column, y)] != null) 
+                {
+                    fallTile(gridTiles[squareId(column, y)]);
+                }
+            }
+        }
+    }
+
+    public function fallTile(gridTile:GridTile)
+    {
+        gridTiles[squareId(gridTile.gridX, gridTile.gridY)] = null;
+        fallingTiles.add(gridTile);
+        gridTile.falling = true;
+    }
+
     public function getSquare(dx:Float, dy:Float):Int
     {
         var x:Int = Math.floor(dx/CELL_WIDTH);
@@ -218,6 +249,7 @@ class Grid extends FlxSprite
         for (gridTile in selectedPath)
         {
             gridTile.selected = false;
+            removeTile(gridTile);
         }
         selectedPath = [];
     }
