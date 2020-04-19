@@ -58,6 +58,11 @@ class GridTile extends FlxSpriteGroup
         }
     }
 
+    public function getLetter():String
+    {
+        return "";
+    }
+
     public override function update(elapsed:Float)
     {
         movement();
@@ -67,7 +72,7 @@ class GridTile extends FlxSpriteGroup
 
 class LetterTile extends GridTile 
 {
-    public var letter:String;    
+    var letter:String;    
     var letterText:FlxText; 
     var letterTileSprite:FlxSprite;
     public function new(grid:Grid, gridX:Int, gridY:Int, letter:String)
@@ -89,5 +94,10 @@ class LetterTile extends GridTile
         else
             letterTileSprite.color = 0xffffff;
         super.update(elapsed);
+    }
+
+    public override function getLetter():String
+    {
+        return letter;
     }
 }

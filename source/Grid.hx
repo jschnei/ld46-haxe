@@ -65,6 +65,10 @@ class Grid extends FlxSprite
                     gridHeight*CELL_HEIGHT+1, 
                     FlxColor.TRANSPARENT, true);
 
+        currentWordText = new FlxText(gridWidth*CELL_WIDTH+10, gridHeight*CELL_HEIGHT/2);
+        currentWordText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
+        playState.add(currentWordText);
+
         for(x in 0...gridWidth+1)
         {
             FlxSpriteUtil.drawLine(this, x*CELL_WIDTH, 0, x*CELL_WIDTH, gridHeight*CELL_HEIGHT, {color: 0xffffffff, thickness: 3});  
@@ -83,6 +87,8 @@ class Grid extends FlxSprite
         {
             gridTile.selected = true;
         }
+
+        currentWordText.text = getCurrentWord();
 
         new_tile_timer += elapsed;
         if (new_tile_timer > NEW_TILE_FREQ) 
@@ -162,6 +168,16 @@ class Grid extends FlxSprite
         return gridHeight;
     }
 
+    public function getCurrentWord():String
+    {
+        var word = "";
+        for (gridTile in selectedPath)
+        {
+            word += gridTile.getLetter();
+        }
+        return word;
+    }
+
     public function inInscribedDiamond(dx:Float, dy:Float):Bool
     {
         var fracX:Float = (dx/CELL_WIDTH - Math.floor(dx/CELL_WIDTH)) - 1/2;
@@ -212,7 +228,7 @@ class Grid extends FlxSprite
         for (gridTile in gridTiles)
         {
             if (gridTile != null)
-                trace("x: " + gridTile.gridX + ", y: " + gridTile.gridY + ", letter: " + cast (gridTile, LetterTile).letter);
+                trace("x: " + gridTile.gridX + ", y: " + gridTile.gridY + ", letter: " + gridTile.getLetter());
         }
     }
 }
