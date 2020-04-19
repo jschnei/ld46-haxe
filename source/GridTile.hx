@@ -13,7 +13,7 @@ class GridTile extends FlxSprite
     public var grid:Grid;
     public var gridX:Int;
     public var gridY:Int;
-    
+
     public var selected:Bool;
 
     public var falling:Bool;

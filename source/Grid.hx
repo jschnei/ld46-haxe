@@ -28,6 +28,7 @@ class Grid extends FlxSprite
 
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
+        super(X, Y);
         this.playState = playState;
 
         gridWidth = width;
@@ -35,16 +36,17 @@ class Grid extends FlxSprite
 
         gridTiles = new Array<GridTile>();
 
+        selectedPath = new Array<GridTile>();
+
         for(y in 0...height)
         {
             for(x in 0...width)
             {
-                // var tile = new EmptyTile(this, x, y);
+                // var tile = new LetterTile(this, x, y, "X");
                 gridTiles.push(null);
             }
         }
 
-        super(X, Y);
         makeGraphic(gridWidth*CELL_WIDTH+1, 
                     gridHeight*CELL_HEIGHT+1, 
                     FlxColor.TRANSPARENT, true);
@@ -61,6 +63,22 @@ class Grid extends FlxSprite
         fallingTiles = new FlxTypedGroup<GridTile>();
 
         addFallingTile(0);
+    }
+
+    override public function update(elapsed:Float):Void
+    {
+        for (gridTile in gridTiles)
+        {
+            if (gridTile != null)
+            {
+                gridTile.selected = false;
+            }
+        }
+
+        for (gridTile in selectedPath)
+        {
+            gridTile.selected = true;
+        }
     }
 
     public function addFallingTile(column:Int)
@@ -110,11 +128,16 @@ class Grid extends FlxSprite
         return gridHeight;
     }
 
-    public function extendSelectedPath(tile:GridTile):Void
+    public function extendSelectedPath(dx:Float, dy:Float):Void
     {
+        var selectedTile:GridTile = getTile(dx, dy);
+        if (selectedTile == null)
+        {
+            return;
+        }
         if (selectedPath.length == 0) 
         {
-            selectedPath.push(tile);
+            selectedPath.push(selectedTile);
         } 
         else
         {
@@ -122,8 +145,8 @@ class Grid extends FlxSprite
             var lastPathTileX:Int = lastPathTile.gridX;
             var lastPathTileY:Int = lastPathTile.gridY;
 
-            var currentTileX:Int = tile.gridX;
-            var currentTileY:Int = tile.gridY;
+            var currentTileX:Int = selectedTile.gridX;
+            var currentTileY:Int = selectedTile.gridY;
             // Make sure that the tile is exactly distance 1 away from the last part of the path.
             if (lastPathTileX == currentTileX && lastPathTileY == currentTileY)
             {
@@ -133,7 +156,12 @@ class Grid extends FlxSprite
             {
                 return;
             }
-            selectedPath.push(tile);
+            selectedPath.push(selectedTile);
         }
+    }
+
+    public function clearSelectedPath():Void
+    {
+        selectedPath = [];
     }
 }
