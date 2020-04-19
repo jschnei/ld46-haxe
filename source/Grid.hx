@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxTimer;
 import flixel.math.FlxRandom;
 
 import GridTile.LetterTile;
@@ -28,12 +29,14 @@ class Grid extends FlxSprite
     public var selectedPath:Array<GridTile>;
 
     public var rand:FlxRandom;
+    public var timer:Float;
 
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
 
         rand = new FlxRandom(322);
+        timer = 0.0;
 
         this.playState = playState;
 
@@ -67,13 +70,11 @@ class Grid extends FlxSprite
         }
 
         fallingTiles = new FlxTypedGroup<GridTile>();
-
-        addFallingTile(0);
-        addFallingTile(1);
     }
 
     override public function update(elapsed:Float):Void
     {
+        timer = timer + elapsed;
         for (gridTile in gridTiles)
         {
             if (gridTile != null)
@@ -86,6 +87,10 @@ class Grid extends FlxSprite
         {
             gridTile.selected = true;
         }
+        if (timer > 1) {
+            timer = timer - 1;
+            addFallingTile(rand.int(0,6));
+        }
     }
 
     public function randomLetter():String
@@ -95,7 +100,7 @@ class Grid extends FlxSprite
 
     public function addFallingTile(column:Int)
     {
-        var tile:GridTile = new LetterTile(this, column, 0, randomLetter(), playState);
+        var tile:GridTile = new LetterTile(this, column, 0, randomLetter());
         fallingTiles.add(tile);
         playState.add(tile);
     }
