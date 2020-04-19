@@ -168,35 +168,38 @@ class Grid extends FlxSprite
         return gridHeight;
     }
 
+    public function inInscribedDiamond(dx:Float, dy:Float):Bool
+    {
+        var fracX:Float = (dx/CELL_WIDTH - Math.floor(dx/CELL_WIDTH)) - 1/2;
+        var fracY:Float = (dy/CELL_HEIGHT - Math.floor(dy/CELL_HEIGHT)) - 1/2;
+        return (Math.abs(fracX) + Math.abs(fracY) <= .5);
+    }
+
     public function extendSelectedPath(dx:Float, dy:Float):Void
     {
         // logGridTiles();
         var selectedTile:GridTile = getTile(dx, dy);
         if (selectedTile == null)
-        {
             return;
-        }
-        // If the path is empty, start the path.
+        // If the path is empty, start the path (regardless of where the tile is being clicked.).
         if (selectedPath.length == 0) 
         {
             selectedPath.push(selectedTile);
             return;
         }
+        // Check that the cursor is sufficiently inside the tile (this is to facilitate diagonal movement).
+        if (!inInscribedDiamond(dx, dy))
+            return;
         // Check that the path doesn't repeat tiles. TODO: may want to use a hashset instead if performance is bad.
         for (gridTile in selectedPath)
-        {
             if (gridTile.gridX == selectedTile.gridX && gridTile.gridY == selectedTile.gridY)
-            {
                 return;
-            }
-        }
+
         var lastPathTile:GridTile = selectedPath[selectedPath.length-1];
         // Make sure that the tile is exactly distance 1 away from the last part of the path.
         if (Math.abs(lastPathTile.gridX - selectedTile.gridX) >= 2 ||
             Math.abs(lastPathTile.gridY - selectedTile.gridY) >= 2)
-        {
             return;
-        }
         selectedPath.push(selectedTile);
     }
 
