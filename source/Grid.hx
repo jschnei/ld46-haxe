@@ -69,7 +69,7 @@ class Grid extends FlxSprite
         fallingTiles = new FlxTypedGroup<GridTile>();
 
         addFallingTile(0);
-        addFallingTile(0);
+        addFallingTile(1);
     }
 
     override public function update(elapsed:Float):Void
@@ -158,6 +158,7 @@ class Grid extends FlxSprite
 
     public function extendSelectedPath(dx:Float, dy:Float):Void
     {
+        logGridTiles();
         var selectedTile:GridTile = getTile(dx, dy);
         if (selectedTile == null)
         {
@@ -192,5 +193,15 @@ class Grid extends FlxSprite
     public function clearSelectedPath():Void
     {
         selectedPath = [];
+    }
+
+    public function logGridTiles():Void
+    {
+        trace("logging tiles");
+        for (gridTile in gridTiles)
+        {
+            if (gridTile != null)
+                trace("x: " + gridTile.gridX + ", y: " + gridTile.gridY + ", letter: " + cast (gridTile, LetterTile).letter);
+        }
     }
 }

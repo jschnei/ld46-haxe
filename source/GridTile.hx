@@ -65,14 +65,17 @@ class GridTile extends FlxSprite
 }
 
 class LetterTile extends GridTile 
-{    
+{
+    public var letter:String;    
     var letterText:FlxText; 
     var playState:PlayState;
+
     public function new(grid:Grid, gridX:Int, gridY:Int, letter:String, ps:PlayState)
     {
         super(grid, gridX, gridY);
         playState = ps;
         makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.fromRGB(255,255,0,100));
+        this.letter = letter;
         letterText = new FlxText(gridX,gridY,0, letter);
         letterText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
         letterText.width += 10;
