@@ -217,6 +217,7 @@ class Grid extends FlxSprite
 
     public function addTileToPath(tile:GridTile)
     {
+        selectSound.stop();
         selectSound.play();
         selectedPath.push(tile);
     }
@@ -243,6 +244,17 @@ class Grid extends FlxSprite
         // Check that the cursor is sufficiently inside the tile (this is to facilitate diagonal movement).
         if (!inInscribedDiamond(dx, dy))
             return;
+        // If the cursor is over the 2nd to last tile in the path, assume player wants to undo the last tile.
+        if (selectedPath.length >= 2)
+        {
+            var penultimateTile:GridTile = selectedPath[selectedPath.length-2];
+            if (selectedTile.gridX == penultimateTile.gridX && selectedTile.gridY == penultimateTile.gridY)
+            {
+                var lastTile:GridTile = selectedPath.pop();
+                lastTile.selected = false;
+                return;
+            }
+        }
         // Check that the path doesn't repeat tiles. TODO: may want to use a hashset instead if performance is bad.
         for (gridTile in selectedPath)
             if (gridTile.gridX == selectedTile.gridX && gridTile.gridY == selectedTile.gridY)
@@ -260,7 +272,7 @@ class Grid extends FlxSprite
     {
         for (gridTile in selectedPath)
             gridTile.selected = false;
-            
+
         if (Registry.isWord(getCurrentWord().toLowerCase()))
         {
             for (gridTile in selectedPath)
