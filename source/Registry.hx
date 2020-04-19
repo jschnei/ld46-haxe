@@ -2,6 +2,7 @@ package;
 
 import haxe.io.Eof;
 import openfl.utils.Assets;
+import polygonal.ds.IntHashSet;
 
 class Registry
 {
@@ -11,13 +12,31 @@ class Registry
     public static var alphabet:Array<String> = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
     public static var TILE_PERIOD = 1;
 
-    public static var WORD_LIST:Array<String>;
+    public static var WORD_LIST:IntHashSet;
+
+    public static var word_prime = 14821; 
+    public static function signature(word:String):Int
+    {
+        var ans = 0;
+        for (i in 0...word.length)
+        {
+            ans *= word_prime;
+            ans += word.charCodeAt(i);
+        }
+
+        return ans;
+    }
 
     public static function initializeWordList()
     {
         var dictString:String = Assets.getText(AssetPaths.wordlist__txt);
-        
-        WORD_LIST = dictString.split('\n');
+        var words = dictString.split('\n');
+
+        WORD_LIST = new IntHashSet(100000);
+        for (word in words) 
+        {
+            WORD_LIST.set(signature(word));
+        }
         // WORD_LIST = WORD_LIST.map(function(str) return str.trim());
 
         // try
@@ -30,5 +49,10 @@ class Registry
         // }
         // catch( ex:haxe.io.Eof ) 
         // {}
+    }
+
+    public static function isWord(word:String): Bool 
+    {
+        return WORD_LIST.has(signature(word));
     }
 }
