@@ -1,4 +1,5 @@
-import haxe.net.WebSocket;
+//import haxe.net.WebSocket;
+import js.html.WebSocket;
 
 class NetworkingUtils {
     public static var ws:WebSocket;
@@ -9,15 +10,17 @@ class NetworkingUtils {
         trace('testing!');
         
         // ws = WebSocket.create("ws://echo.websocket.org", ['echo-protocol'], false);
-        ws = WebSocket.create("ws://localhost:9999/", ['echo-protocol'], false);
+        ws = new WebSocket("ws://echo.websocket.org");
+        // ws = new WebSocket("ws://localhost:9999/");
         ws.onopen = function() 
         {
             trace('open!');
-            ws.sendString('hello friend!');
+            ws.send('hello friend!');
         };
-        ws.onmessageString = function(message) 
+        ws.onmessage = function(message) 
         {
-            trace('message from server!' + message);
+            trace('message from server!');
+            trace(message.data);
         };
         ws.onclose = function() 
         {
@@ -26,20 +29,11 @@ class NetworkingUtils {
         }
     }
 
-    public static function process()
-    {
-        // trace(isOpen);
-        if (isOpen)
-        {
-            ws.process();
-        }
-    }
-
     public static function sendMessage(message: String)
     {
         if (isOpen)
         {
-            ws.sendString(message);
+            ws.send(message);
         }
     }
 }

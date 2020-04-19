@@ -77,7 +77,6 @@ class PlayState extends FlxState
 			_grid.logGridTiles();
 		}
 
-		NetworkingUtils.process();
 	}
 
 
