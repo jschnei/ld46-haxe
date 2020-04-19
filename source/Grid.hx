@@ -176,30 +176,28 @@ class Grid extends FlxSprite
         {
             return;
         }
+        // If the path is empty, start the path.
         if (selectedPath.length == 0) 
         {
             selectedPath.push(selectedTile);
-        } 
-        else
-        {
-            var lastPathTile:GridTile = selectedPath[selectedPath.length-1];
-            var lastPathTileX:Int = lastPathTile.gridX;
-            var lastPathTileY:Int = lastPathTile.gridY;
-
-            var currentTileX:Int = selectedTile.gridX;
-            var currentTileY:Int = selectedTile.gridY;
-            // Make sure that the tile is exactly distance 1 away from the last part of the path.
-            // TODO: path can't repeat letters.
-            if (lastPathTileX == currentTileX && lastPathTileY == currentTileY)
-            {
-                return;
-            }
-            if (Math.abs(lastPathTileX - currentTileX) >= 2 || Math.abs (lastPathTileY - currentTileY) >= 2)
-            {
-                return;
-            }
-            selectedPath.push(selectedTile);
+            return;
         }
+        // Check that the path doesn't repeat tiles. TODO: may want to use a hashset instead if performance is bad.
+        for (gridTile in selectedPath)
+        {
+            if (gridTile.gridX == selectedTile.gridX && gridTile.gridY == selectedTile.gridY)
+            {
+                return;
+            }
+        }
+        var lastPathTile:GridTile = selectedPath[selectedPath.length-1];
+        // Make sure that the tile is exactly distance 1 away from the last part of the path.
+        if (Math.abs(lastPathTile.gridX - selectedTile.gridX) >= 2 ||
+            Math.abs(lastPathTile.gridY - selectedTile.gridY) >= 2)
+        {
+            return;
+        }
+        selectedPath.push(selectedTile);
     }
 
     public function clearSelectedPath():Void
