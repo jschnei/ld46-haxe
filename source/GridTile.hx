@@ -80,16 +80,16 @@ class LetterTile extends GridTile
         add(letterTileSprite);
         letterText = new FlxText(gridX,gridY,0, letter);
         letterText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
-        letterText.width += 10;
+        letterText.width = Registry.GRID_SIZE;
         add(letterText);
     }
 
     public override function update(elapsed:Float)
     {
         if (selected)
-            color = 0xff0000;
+            letterTileSprite.color = 0xff0000;
         else
-            color = 0xffffff;
+            letterTileSprite.color = 0xffffff;
         super.update(elapsed);
     }
 }
