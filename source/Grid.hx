@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -34,7 +33,7 @@ class Grid extends FlxSprite
     public var selectedPath:Array<GridTile>;
     public var currentWordText:FlxText;
 
-    public var rand:FlxRandom;
+    public var rand:Randomizer;
     public var timer:Float;
 
     public static var NEW_TILE_FREQ = 1.0;
@@ -48,7 +47,7 @@ class Grid extends FlxSprite
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
-        rand = new FlxRandom(Std.int(Date.now().getTime()/1000));
+        rand = new Randomizer(this);
         timer = 0.0;
 
         this.playState = playState;
@@ -106,14 +105,14 @@ class Grid extends FlxSprite
         new_tile_timer += elapsed;
         if (new_tile_timer > NEW_TILE_FREQ) 
         {
-            addFallingTile(rand.int(0, Registry.PLAYFIELD_WIDTH-1));
+            addFallingTile(rand.getColumn(gridWidth));
             new_tile_timer = 0;
         }
     }
 
     public function randomLetter():String
     {
-        return Registry.alphabet[rand.weightedPick(Registry.letterFreq)];
+        return rand.getLetter();
     }
 
     public function addFallingTile(column:Int)
