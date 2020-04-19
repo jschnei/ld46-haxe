@@ -44,6 +44,8 @@ class PlayState extends FlxState
 		Registry.initializeWordList();
 		NetworkingUtils.test();
 
+		trace("reached here");
+
 		super.create();
 	}	
 
@@ -64,6 +66,8 @@ class PlayState extends FlxState
 		{
 			_grid.clearSelectedPath();
 		}
+
+		NetworkingUtils.ws.process();
 	}
 
 
