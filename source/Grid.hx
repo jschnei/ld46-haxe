@@ -33,7 +33,6 @@ class Grid extends FlxSprite
     public var selectedPath:Array<GridTile>;
     public var currentWordText:FlxText;
 
-    public var rand:Randomizer;
     public var timer:Float;
 
     public static var NEW_TILE_FREQ = 1.0;
@@ -47,7 +46,6 @@ class Grid extends FlxSprite
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
-        rand = new Randomizer(this);
         timer = 0.0;
 
         this.playState = playState;
@@ -105,14 +103,14 @@ class Grid extends FlxSprite
         new_tile_timer += elapsed;
         if (new_tile_timer > NEW_TILE_FREQ) 
         {
-            addFallingTile(rand.getColumn());
+            addFallingTile(Randomizer.getColumn());
             new_tile_timer = 0;
         }
     }
 
     public function randomLetter():String
     {
-        return rand.getLetter();
+        return Randomizer.getLetter();
     }
 
     public function addFallingTile(column:Int)

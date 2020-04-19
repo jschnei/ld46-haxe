@@ -36,15 +36,11 @@ class PlayState extends FlxState
 		
 		add(_grid);
 
-		// topControlMode = new ControlMode.SelectionControlMode(this, null);
-		// currentControlMode = topControlMode;
-
 		FlxG.camera.focusOn(new FlxPoint(Grid.CELL_WIDTH * _grid.gridWidth/2, Grid.CELL_HEIGHT * _grid.gridHeight/2));
 
 		Registry.initializeWordList();
-		NetworkingUtils.test();
-
-		trace("reached here");
+		Randomizer.intialize();
+		NetworkingUtils.initialize();
 
 		super.create();
 	}	

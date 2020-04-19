@@ -9,12 +9,15 @@ class NetworkingUtils {
     public static var ws:WebSocket;
     public static var isOpen:Bool = true;
 
-    public static function test() 
-    {
-        trace('testing!');
-        
+    public static var name:String;
+
+    public static function initialize() 
+    {   
         // ws = WebSocket.create("ws://echo.websocket.org", ['echo-protocol'], false);
-        // ws = new WebSocket("ws://echo.websocket.org");
+        // ws = new WebSocket("ws://echo.websocket.org"); 
+        name = Randomizer.getName();
+        trace('name:', name);
+
         ws = new WebSocket("ws://localhost:9999/");
         ws.onopen = function() 
         {
@@ -23,7 +26,7 @@ class NetworkingUtils {
         };
         ws.onmessage = function(message) 
         {
-            trace('message from server!');
+            // trace('message from server!');
             trace(message.data);
         };
         ws.onclose = function() 

@@ -2,7 +2,7 @@
 
 class NetworkingUtils {
 
-    public static function test() 
+    public static function initialize() 
     {
         
     }

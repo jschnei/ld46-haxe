@@ -16,6 +16,8 @@ class Registry
 
     public static var WORD_LIST:IntHashSet;
 
+    public static var rand:Randomizer;
+
     public static var word_prime = 14821; 
     public static function signature(word:String):Int
     {

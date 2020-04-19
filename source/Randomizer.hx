@@ -4,39 +4,50 @@ import flixel.math.FlxRandom;
 
 class Randomizer
 {
-    public var rand:FlxRandom;
-    public var grid:Grid;
+    public static var rand:FlxRandom;
 
-    public var columnFreqs:Array<Int> = [0, 0, 0, 0, 0,
-                                         1, 1, 1, 1, 1, 1, 
-                                         2, 2, 2, 2, 2, 2, 2,
-                                         3, 3, 3, 3, 3, 3,
-                                         4, 4 ,4, 4, 4];
-    var currentBag_:Array<Int>;
+    public static var NAME_LENGTH = 8;
+    public static var COLUMN_FREQS:Array<Int> = [0, 0, 0, 0, 0,
+                                                1, 1, 1, 1, 1, 1, 
+                                                2, 2, 2, 2, 2, 2, 2,
+                                                3, 3, 3, 3, 3, 3,
+                                                4, 4 ,4, 4, 4];
+    static var currentBag_:Array<Int>;
 
-    public function new(grid:Grid)
+    public static function intialize()
     {
-        this.grid = grid;
         rand = new FlxRandom(Std.int(Date.now().getTime()/1000));
 
         currentBag_ = new Array<Int>();
     }
 
-    public function getColumn():Int
+    public static function getColumn():Int
     {
         if (currentBag_.length == 0)
             generateNewBag();
         return currentBag_.pop();
     }
 
-    public function getLetter():String
+    public static function getLetter():String
     {
         return Registry.alphabet[rand.weightedPick(Registry.letterFreq)];
     }
 
-    private function generateNewBag():Void
+    public static function getName():String
     {
-        rand.shuffle(columnFreqs);
-        currentBag_ = columnFreqs.copy();
+        var name = "";
+
+        for (i in 0...NAME_LENGTH)
+        {
+            name += getLetter();
+        }
+
+        return name;
+    }
+
+    private static function generateNewBag():Void
+    {
+        rand.shuffle(COLUMN_FREQS);
+        currentBag_ = COLUMN_FREQS.copy();
     }
 }
