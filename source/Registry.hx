@@ -31,13 +31,14 @@ class Registry
 
     public static function initializeWordList()
     {
-        var dictString:String = Assets.getText(AssetPaths.wordlist__txt);
+        var dictString:String = Assets.getText(AssetPaths.enable1__txt);
         var words = dictString.split('\n');
 
         WORD_LIST = new IntHashSet(100000);
         for (word in words) 
         {
-            WORD_LIST.set(signature(word));
+            if (word.length >= 3)
+                WORD_LIST.set(signature(word));
         }
         // WORD_LIST = WORD_LIST.map(function(str) return str.trim());
 
