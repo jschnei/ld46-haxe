@@ -80,7 +80,7 @@ class LetterTile extends GridTile
         add(letterTileSprite);
         letterText = new FlxText(gridX,gridY,0, letter);
         letterText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
-        letterText.width += 10;
+        letterText.width = Registry.GRID_SIZE;
         add(letterText);
     }
 
