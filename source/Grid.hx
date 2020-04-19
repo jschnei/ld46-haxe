@@ -8,7 +8,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
-
+using Lambda;
 import GridTile.LetterTile;
 
 class Grid extends FlxSprite
@@ -246,10 +246,17 @@ class Grid extends FlxSprite
 
     public function clearSelectedPath():Void
     {
+        if (playState.wordList.has(getCurrentWord().toLowerCase()))
+        {
+            for (gridTile in selectedPath)
+            {
+                removeTile(gridTile);
+            }
+        }
+
         for (gridTile in selectedPath)
         {
             gridTile.selected = false;
-            removeTile(gridTile);
         }
         selectedPath = [];
     }
