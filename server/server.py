@@ -9,23 +9,12 @@ import websockets
 
 logging.basicConfig()
 
-STATE = {"value": 0}
 BOARDS = {}
 
 USERS = set()
 
-
-def state_event():
-    return json.dumps({"type": "state", **STATE})
-
 def users_event():
     return json.dumps({"type": "users", "count": len(USERS)})
-
-
-async def notify_state():
-    if USERS:  # asyncio.wait doesn't accept an empty list
-        message = state_event()
-        await asyncio.wait([user.send(message) for user in USERS])
 
 async def notify_sync(name, board):
     message = json.dumps({"type": "sync", 
@@ -55,13 +44,12 @@ async def counter(websocket, path):
     # register(websocket) sends user_event() to websocket
     await register(websocket)
     try:
-        await websocket.send(state_event())
+        # await websocket.send(users_event())
         async for message in websocket:
             data = json.loads(message)
             print(data)
             if data["type"] == "word":
-                STATE["word"] = data["message"]
-                await notify_state()
+                pass
             elif data["type"] == "sync":
                 name = data["name"]
                 board = data["message"]
