@@ -41,6 +41,7 @@ class Grid extends FlxSprite
     public var selectSound:FlxSound;
     public var unselectSound:FlxSound;
     public var clearSound:FlxSound;
+    public var badWordSound:FlxSound;
 
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
@@ -89,6 +90,7 @@ class Grid extends FlxSprite
         selectSound = FlxG.sound.load(AssetPaths.select__wav);
         unselectSound = FlxG.sound.load(AssetPaths.unselect__wav);
         clearSound = FlxG.sound.load(AssetPaths.clear__wav);
+        badWordSound = FlxG.sound.load(AssetPaths.badword__wav, .5);
     }
 
     override public function update(elapsed:Float):Void
@@ -276,10 +278,13 @@ class Grid extends FlxSprite
 
     public function clearSelectedPath():Void
     {
+        if (getCurrentWord().length == 0)
+            return;
+
         for (gridTile in selectedPath)
             gridTile.selected = false;
 
-        if (getCurrentWord().length > 0 && Registry.isWord(getCurrentWord().toLowerCase()))
+        if (Registry.isWord(getCurrentWord().toLowerCase()))
         {
             NetworkingUtils.ws.sendString(getCurrentWord());
             for (gridTile in selectedPath)
@@ -287,6 +292,18 @@ class Grid extends FlxSprite
                 removeTile(gridTile);
             }
             clearSound.play();
+        }
+        else
+        {
+            if (getCurrentWord().length == 1)
+            {
+                unselectSound.stop();
+                unselectSound.play();
+            }
+            else
+            {
+                badWordSound.play();
+            }
         }
 
         selectedPath = [];
