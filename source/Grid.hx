@@ -105,7 +105,7 @@ class Grid extends FlxSprite
         new_tile_timer += elapsed;
         if (new_tile_timer > NEW_TILE_FREQ) 
         {
-            addFallingTile(rand.int(0,6));
+            addFallingTile(rand.int(0, Registry.PLAYFIELD_WIDTH-1));
             new_tile_timer = 0;
         }
     }
