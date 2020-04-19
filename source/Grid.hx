@@ -1,9 +1,11 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
+import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
@@ -35,6 +37,8 @@ class Grid extends FlxSprite
 
     public static var NEW_TILE_FREQ = 1.0;
     public var new_tile_timer:Float = 0;
+
+    public var selectSound:FlxSound;
 
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
@@ -79,6 +83,8 @@ class Grid extends FlxSprite
         }
 
         fallingTiles = new FlxTypedGroup<GridTile>();
+
+        selectSound = FlxG.sound.load(AssetPaths.select__wav);
     }
 
     override public function update(elapsed:Float):Void
@@ -209,6 +215,12 @@ class Grid extends FlxSprite
         return word;
     }
 
+    public function addTileToPath(tile:GridTile)
+    {
+        selectSound.play();
+        selectedPath.push(tile);
+    }
+
     public function inInscribedDiamond(dx:Float, dy:Float):Bool
     {
         var fracX:Float = (dx/CELL_WIDTH - Math.floor(dx/CELL_WIDTH)) - 1/2;
@@ -225,7 +237,7 @@ class Grid extends FlxSprite
         // If the path is empty, start the path (regardless of where the tile is being clicked.).
         if (selectedPath.length == 0) 
         {
-            selectedPath.push(selectedTile);
+            addTileToPath(selectedTile);
             return;
         }
         // Check that the cursor is sufficiently inside the tile (this is to facilitate diagonal movement).
@@ -241,7 +253,7 @@ class Grid extends FlxSprite
         if (Math.abs(lastPathTile.gridX - selectedTile.gridX) >= 2 ||
             Math.abs(lastPathTile.gridY - selectedTile.gridY) >= 2)
             return;
-        selectedPath.push(selectedTile);
+        addTileToPath(selectedTile);
     }
 
     public function clearSelectedPath():Void
@@ -254,10 +266,6 @@ class Grid extends FlxSprite
             }
         }
 
-        for (gridTile in selectedPath)
-        {
-            gridTile.selected = false;
-        }
         selectedPath = [];
     }
 
