@@ -39,6 +39,7 @@ class Grid extends FlxSprite
     public var new_tile_timer:Float = 0;
 
     public var selectSound:FlxSound;
+    public var unselectSound:FlxSound;
 
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
@@ -85,6 +86,7 @@ class Grid extends FlxSprite
         fallingTiles = new FlxTypedGroup<GridTile>();
 
         selectSound = FlxG.sound.load(AssetPaths.select__wav);
+        unselectSound = FlxG.sound.load(AssetPaths.unselect__wav);
     }
 
     override public function update(elapsed:Float):Void
@@ -252,6 +254,8 @@ class Grid extends FlxSprite
             {
                 var lastTile:GridTile = selectedPath.pop();
                 lastTile.selected = false;
+                unselectSound.stop();
+                unselectSound.play();
                 return;
             }
         }
