@@ -13,6 +13,7 @@ class NetworkingUtils {
     public static var name:String;
 
     public static var playerBoards:Map<String, String>;
+    public static var track:String = "";
 
     public static function initialize() 
     {   
@@ -60,6 +61,7 @@ class NetworkingUtils {
         switch (messageObject.type)
         {
             case "sync":
+                processSyncMessage(messageObject);
                 trace("sync message");
             case "state":
                 trace("state message");
@@ -71,9 +73,27 @@ class NetworkingUtils {
 
     public static function processSyncMessage(message:Dynamic)
     {
-        var name:String = message.name;
+        var msg_name:String = message.name;
         var board:String = message.board;
-        
-        playerBoards.set(name, board);
+
+        trace('msg_name', msg_name);
+        trace('board', board);
+
+        // if we are not tracking anything and see a name 
+        // that isn't ours, track it
+        if (track == "" && msg_name != name)
+        {
+            track = msg_name;
+            trace("now tracking", track);
+        }
+
+        playerBoards.set(msg_name, board);
+    }
+
+    public static function getTrackedBoard():String 
+    {
+        if (playerBoards.exists(track))
+            return playerBoards.get(track);
+        return "";
     }
 }
