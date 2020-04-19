@@ -43,7 +43,7 @@ class GridTile extends FlxSpriteGroup
             {
                 if (topTile - 1 >= 0)
                 {
-                    grid.insertTile(this, gridX, topTile-1);
+                    grid.insertFallingTile(this, gridX, topTile-1);
                 } else{
                     // this block is stuck off the top
                     trace("oh no!");

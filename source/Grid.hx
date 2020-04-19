@@ -123,12 +123,16 @@ class Grid extends FlxSprite
         playState.add(tile);
     }
 
+    public function addNewLetterTile(gridX:Int, gridY:Int)
+    {
+        // trace("x: " + gridX + ", y: " + gridY);
+        var tile:LetterTile = new LetterTile(this, gridX, gridY, randomLetter());
+        playState.add(tile);
+        insertTile(tile, gridX, gridY);
+    }
+
     public function insertTile(gridTile:GridTile, gridX:Int, gridY:Int)
     {
-        // stop tile
-        gridTile.velocity.y = 0;
-        gridTile.falling = false;
-
         // align to grid
         gridTile.setPosition(x + Grid.CELL_WIDTH * gridX, y + Grid.CELL_HEIGHT * gridY);
         gridTile.gridX = gridX;
@@ -136,6 +140,16 @@ class Grid extends FlxSprite
 
         // insert in gridTiles
         gridTiles[squareId(gridX, gridY)] = gridTile;
+    }
+
+    public function insertFallingTile(gridTile:GridTile, gridX:Int, gridY:Int)
+    {
+        // stop tile
+        gridTile.velocity.y = 0;
+        gridTile.falling = false;
+
+        // insert into gridTiles
+        insertTile(gridTile, gridX, gridY);
 
         // remove from fallingTiles
         fallingTiles.remove(gridTile);
@@ -309,6 +323,35 @@ class Grid extends FlxSprite
         }
 
         selectedPath = [];
+    }
+
+    public function addRowsToBottom(numRows:Int)
+    {
+        for (x in 0...gridWidth)
+        {
+            for (y in 0...gridHeight)
+            {
+                // For the bottom numRows rows, add new tiles. All other tiles are moved up numRows rows.
+                if (y + numRows >= gridHeight)
+                {
+                    addNewLetterTile(x, y);
+                    continue;
+                }
+                if (gridTiles[squareId(x,y)] == null)
+                    continue;
+                var tileToMove:GridTile = gridTiles[squareId(x,y)];
+                if (y < numRows)
+                {
+                    trace("uh oh!!! you are dead");
+                }
+                else
+                {
+                    // trace("moving tile from: " + x + ", " + y + " to " + x + ", " + (y-numRows));
+                    gridTiles[squareId(x,y)] = null;
+                    insertTile(tileToMove, x, y-numRows);
+                }
+            }
+        }
     }
 
     public function logGridTiles():Void
