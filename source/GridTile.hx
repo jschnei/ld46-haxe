@@ -85,6 +85,8 @@ class LetterTile extends GridTile
         letterText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
         letterText.width = Registry.GRID_SIZE;
         add(letterText);
+        
+        this.letter = letter;
     }
 
     public override function update(elapsed:Float)
