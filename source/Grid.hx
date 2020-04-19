@@ -165,6 +165,7 @@ class Grid extends FlxSprite
             var currentTileX:Int = selectedTile.gridX;
             var currentTileY:Int = selectedTile.gridY;
             // Make sure that the tile is exactly distance 1 away from the last part of the path.
+            // TODO: path can't repeat letters.
             if (lastPathTileX == currentTileX && lastPathTileY == currentTileY)
             {
                 return;
