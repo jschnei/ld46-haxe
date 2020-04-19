@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
+import flixel.math.FlxRandom;
 
 import GridTile.LetterTile;
 
@@ -26,9 +27,14 @@ class Grid extends FlxSprite
 
     public var selectedPath:Array<GridTile>;
 
+    public var rand:FlxRandom;
+
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
+
+        rand = new FlxRandom(322);
+
         this.playState = playState;
 
         gridWidth = width;
@@ -82,9 +88,14 @@ class Grid extends FlxSprite
         }
     }
 
+    public function randomLetter():String
+    {
+        return Registry.alphabet[rand.weightedPick(Registry.letterFreq)];
+    }
+
     public function addFallingTile(column:Int)
     {
-        var tile:GridTile = new LetterTile(this, column, 0, "A", playState);
+        var tile:GridTile = new LetterTile(this, column, 0, randomLetter(), playState);
         fallingTiles.add(tile);
         playState.add(tile);
     }
