@@ -163,7 +163,7 @@ class Grid extends FlxSprite
 
     public function extendSelectedPath(dx:Float, dy:Float):Void
     {
-        logGridTiles();
+        // logGridTiles();
         var selectedTile:GridTile = getTile(dx, dy);
         if (selectedTile == null)
         {
