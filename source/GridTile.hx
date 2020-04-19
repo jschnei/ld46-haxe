@@ -9,11 +9,13 @@ import flixel.text.FlxText;
 
 class GridTile extends FlxSprite
 {
-    public static var FALL_SPEED:Int = 5;
+    public static var FALL_SPEED:Int = 200; //= 50;
 
     public var grid:Grid;
     public var gridX:Int;
     public var gridY:Int;
+
+    public var selected:Bool;
 
     public var falling:Bool;
     
@@ -27,7 +29,6 @@ class GridTile extends FlxSprite
 
         var X = grid.x + Grid.CELL_WIDTH * gridX;
         var Y = grid.y + Grid.CELL_HEIGHT * gridY;
-
         super(X, Y);
     }
 
@@ -36,7 +37,24 @@ class GridTile extends FlxSprite
         if (falling) 
         {
             velocity.y = FALL_SPEED;
-        } else {
+
+            var topTile = grid.columnTop(gridX);
+            var dy = y - grid.y;
+            if (dy >= (topTile - 1) * Grid.CELL_HEIGHT) 
+            {
+                if (topTile - 1 >= 0)
+                {
+                    grid.insertTile(this, gridX, topTile-1);
+                } else{
+                    // this block is stuck off the top
+                    trace("oh no!");
+                    velocity.y = 0;
+                    falling = false;
+                }
+            }
+        } 
+        else 
+        {
             velocity.y = 0;
         }
     }
@@ -46,14 +64,13 @@ class GridTile extends FlxSprite
         movement();
         super.update(elapsed);
     }
-
 }
 
 class LetterTile extends GridTile 
 {    
     var letterText:FlxText; 
     var playState:PlayState;
-    public static var FALL_SPEED:Int = 5;
+    public static var FALL_SPEED:Int = 200;
     public function new(grid:Grid, gridX:Int, gridY:Int, letter:String, ps:PlayState)
     {
         super(grid, gridX, gridY);
@@ -67,6 +84,10 @@ class LetterTile extends GridTile
 
     public override function update(elapsed:Float)
     {
+        if (selected)
+            color = 0xff0000;
+        else
+            color = 0xffffff;
         letterText.y = letterText.y + elapsed * FALL_SPEED;
         playState.add(letterText);
         super.update(elapsed);
