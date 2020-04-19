@@ -33,10 +33,11 @@ class Grid extends FlxSprite
     public var selectedPath:Array<GridTile>;
     public var currentWordText:FlxText;
 
-    public var timer:Float;
-
     public static var NEW_TILE_FREQ = 1.0;
     public var new_tile_timer:Float = 0;
+
+    public static var NETWORK_SYNC_FREQ = 1.5;
+    public var network_sync_timer:Float = 0;
 
     public var selectSound:FlxSound;
     public var unselectSound:FlxSound;
@@ -46,7 +47,6 @@ class Grid extends FlxSprite
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
-        timer = 0.0;
 
         this.playState = playState;
 
@@ -105,6 +105,13 @@ class Grid extends FlxSprite
         {
             addFallingTile(Randomizer.getColumn());
             new_tile_timer = 0;
+        }
+
+        network_sync_timer += elapsed;
+        if (network_sync_timer > NETWORK_SYNC_FREQ)
+        {
+            NetworkingUtils.sendMessage("sync", gridString());
+            network_sync_timer = 0;
         }
     }
 
@@ -358,5 +365,23 @@ class Grid extends FlxSprite
             if (gridTile != null)
                 trace("x: " + gridTile.gridX + ", y: " + gridTile.gridY + ", letter: " + gridTile.getLetter());
         }
+    }
+
+    public function gridString():String
+    {
+        var ret:String = "";
+        for (gridTile in gridTiles)
+        {
+            if (gridTile != null)
+            {
+                ret += "1";
+            }
+            else
+            {
+                ret += "0";
+            }
+        }
+
+        return ret;
     }
 }

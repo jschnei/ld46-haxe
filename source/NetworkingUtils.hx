@@ -42,6 +42,7 @@ class NetworkingUtils {
         {
             var messageBlob:Dynamic<String> = {};
             messageBlob.type = type;
+            messageBlob.name = name;
             messageBlob.message = message;
             ws.send(Json.stringify(messageBlob));
         }

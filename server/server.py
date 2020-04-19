@@ -10,13 +10,13 @@ import websockets
 logging.basicConfig()
 
 STATE = {"value": 0}
+BOARDS = {}
 
 USERS = set()
 
 
 def state_event():
     return json.dumps({"type": "state", **STATE})
-
 
 def users_event():
     return json.dumps({"type": "users", "count": len(USERS)})
@@ -25,6 +25,13 @@ def users_event():
 async def notify_state():
     if USERS:  # asyncio.wait doesn't accept an empty list
         message = state_event()
+        await asyncio.wait([user.send(message) for user in USERS])
+
+async def notify_sync(name, board):
+    message = json.dumps({"type": "sync", 
+                          "name": name,
+                          "board": board})
+    if USERS:  # asyncio.wait doesn't accept an empty list
         await asyncio.wait([user.send(message) for user in USERS])
 
 
@@ -55,6 +62,13 @@ async def counter(websocket, path):
             if data["type"] == "word":
                 STATE["word"] = data["message"]
                 await notify_state()
+            elif data["type"] == "sync":
+                name = data["name"]
+                board = data["message"]
+
+                BOARDS[name] = board
+                await notify_sync(name, board)
+                pass
             else:
                 logging.error("unsupported event: {}", data)
     finally:
