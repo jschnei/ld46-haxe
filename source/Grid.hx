@@ -258,6 +258,9 @@ class Grid extends FlxSprite
 
     public function clearSelectedPath():Void
     {
+        for (gridTile in selectedPath)
+            gridTile.selected = false;
+            
         if (Registry.isWord(getCurrentWord().toLowerCase()))
         {
             for (gridTile in selectedPath)
