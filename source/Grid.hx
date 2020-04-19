@@ -125,8 +125,8 @@ class Grid extends FlxSprite
 
     public function addNewLetterTile(gridX:Int, gridY:Int)
     {
-        // trace("x: " + gridX + ", y: " + gridY);
         var tile:LetterTile = new LetterTile(this, gridX, gridY, randomLetter());
+        tile.falling = false;
         playState.add(tile);
         insertTile(tile, gridX, gridY);
     }
@@ -327,16 +327,11 @@ class Grid extends FlxSprite
 
     public function addRowsToBottom(numRows:Int)
     {
+        // Move all existing tiles up numRows rows.
         for (x in 0...gridWidth)
         {
             for (y in 0...gridHeight)
-            {
-                // For the bottom numRows rows, add new tiles. All other tiles are moved up numRows rows.
-                if (y + numRows >= gridHeight)
-                {
-                    addNewLetterTile(x, y);
-                    continue;
-                }
+            {   
                 if (gridTiles[squareId(x,y)] == null)
                     continue;
                 var tileToMove:GridTile = gridTiles[squareId(x,y)];
@@ -352,6 +347,10 @@ class Grid extends FlxSprite
                 }
             }
         }
+        // Add new tiles in the bottom numRows rows.
+        for (x in 0...gridWidth)
+            for (y in gridHeight-numRows...gridHeight)
+                    addNewLetterTile(x, y);
     }
 
     public function logGridTiles():Void
