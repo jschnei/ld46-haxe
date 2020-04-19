@@ -25,7 +25,7 @@ class PlayState extends FlxState
         // add(background);
 		// Registry.init();
 
-		_grid = new Grid(this, Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT);
+		_grid = new Grid(Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT);
 		for(tile in _grid.gridTiles)
 		{
 			if (tile != null) 

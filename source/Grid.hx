@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
@@ -14,12 +15,12 @@ using Lambda;
 import GridTile.LetterTile;
 import Std;
 
-class Grid extends FlxSprite
+class Grid extends FlxSpriteGroup
 {
-    public var playState:PlayState;
-
     public static var CELL_WIDTH:Int = 64;
     public static var CELL_HEIGHT:Int = 64;
+
+    public var gridSprite:FlxSprite;
 
     public var gridHeight:Int;
     public var gridWidth:Int;
@@ -48,11 +49,9 @@ class Grid extends FlxSprite
     public var mouseHeldX:Float = 0;
     public var mouseHeldY:Float = 0;
 
-    public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
+    public function new(width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
-
-        this.playState = playState;
 
         gridWidth = width;
         gridHeight = height;
@@ -69,18 +68,18 @@ class Grid extends FlxSprite
                 gridTiles.push(null);
             }
         }
-
-        makeGraphic(gridWidth*CELL_WIDTH+1, 
-                    gridHeight*CELL_HEIGHT+1, 
-                    FlxColor.TRANSPARENT, true);
-
+        gridSprite = new FlxSprite();
+        gridSprite.makeGraphic(gridWidth*CELL_WIDTH+1, 
+                               gridHeight*CELL_HEIGHT+1, 
+                               FlxColor.TRANSPARENT, true);
+        add(gridSprite);
         for(x in 0...gridWidth+1)
         {
-            FlxSpriteUtil.drawLine(this, x*CELL_WIDTH, 0, x*CELL_WIDTH, gridHeight*CELL_HEIGHT, {color: 0xffffffff, thickness: 3});  
+            FlxSpriteUtil.drawLine(gridSprite, x*CELL_WIDTH, 0, x*CELL_WIDTH, gridHeight*CELL_HEIGHT, {color: 0xffffffff, thickness: 3});  
         }
         for(y in 0...gridHeight+1)
         {
-            FlxSpriteUtil.drawLine(this, 0, y*CELL_HEIGHT, gridWidth*CELL_WIDTH, y*CELL_HEIGHT, {color: 0xffffffff,thickness: 3});
+            FlxSpriteUtil.drawLine(gridSprite, 0, y*CELL_HEIGHT, gridWidth*CELL_WIDTH, y*CELL_HEIGHT, {color: 0xffffffff,thickness: 3});
         }
 
         fallingTiles = new FlxTypedGroup<GridTile>();
@@ -119,6 +118,8 @@ class Grid extends FlxSprite
             NetworkingUtils.sendMessage("sync", gridString());
             network_sync_timer = 0;
         }
+
+        super.update(elapsed);
     }
 
     public function randomLetter():String
@@ -130,14 +131,14 @@ class Grid extends FlxSprite
     {
         var tile:GridTile = new LetterTile(this, column, 0, randomLetter());
         fallingTiles.add(tile);
-        playState.add(tile);
+        add(tile);
     }
 
     public function addNewLetterTile(gridX:Int, gridY:Int)
     {
         var tile:LetterTile = new LetterTile(this, gridX, gridY, randomLetter());
         tile.falling = false;
-        playState.add(tile);
+        add(tile);
         insertTile(tile, gridX, gridY);
     }
 
