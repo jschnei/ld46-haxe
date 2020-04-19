@@ -44,6 +44,10 @@ class Grid extends FlxSprite
     public var clearSound:FlxSound;
     public var badWordSound:FlxSound;
 
+    // Coordinates of the last held mouse location. 
+    public var mouseHeldX:Float = 0;
+    public var mouseHeldY:Float = 0;
+
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
@@ -70,10 +74,6 @@ class Grid extends FlxSprite
                     gridHeight*CELL_HEIGHT+1, 
                     FlxColor.TRANSPARENT, true);
 
-        currentWordText = new FlxText(gridWidth*CELL_WIDTH+10, gridHeight*CELL_HEIGHT/2);
-        currentWordText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
-        playState.add(currentWordText);
-
         for(x in 0...gridWidth+1)
         {
             FlxSpriteUtil.drawLine(this, x*CELL_WIDTH, 0, x*CELL_WIDTH, gridHeight*CELL_HEIGHT, {color: 0xffffffff, thickness: 3});  
@@ -89,6 +89,10 @@ class Grid extends FlxSprite
         unselectSound = FlxG.sound.load(AssetPaths.unselect__wav);
         clearSound = FlxG.sound.load(AssetPaths.clear__wav, .1);
         badWordSound = FlxG.sound.load(AssetPaths.badword__wav, .5);
+
+        currentWordText = new FlxText(gridWidth*CELL_WIDTH+10, gridHeight*CELL_HEIGHT/2);
+        currentWordText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
+        // currentWordText is being added in PlayState so it can appear above the grid, sorry for hack
     }
 
     override public function update(elapsed:Float):Void
@@ -99,6 +103,8 @@ class Grid extends FlxSprite
         }
 
         currentWordText.text = getCurrentWord();
+        currentWordText.y = mouseHeldY - 180;
+        currentWordText.x = mouseHeldX - (currentWordText.width / 2);
 
         new_tile_timer += elapsed;
         if (new_tile_timer > NEW_TILE_FREQ) 
@@ -256,7 +262,8 @@ class Grid extends FlxSprite
 
     public function onMouseHold(dx:Float, dy:Float):Void
     {
-        // logGridTiles();
+        mouseHeldX = dx;
+        mouseHeldY = dy;
         var selectedTile:GridTile = getTile(dx, dy);
         if (selectedTile == null)
             return;
@@ -345,7 +352,6 @@ class Grid extends FlxSprite
                 }
                 else
                 {
-                    // trace("moving tile from: " + x + ", " + y + " to " + x + ", " + (y-numRows));
                     gridTiles[squareId(x,y)] = null;
                     insertTile(tileToMove, x, y-numRows);
                 }
