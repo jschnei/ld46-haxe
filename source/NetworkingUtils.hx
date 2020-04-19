@@ -5,7 +5,7 @@ class NetworkingUtils {
 
     public static function test() {
         trace('testing!');
-        ws = WebSocket.create("wss://echo.websocket.org", ['echo-protocol'], false);
+        ws = WebSocket.create("ws://localhost:9999/", ['echo-protocol'], false);
         ws.onopen = function() {
             trace('open!');
             ws.sendString('hello friend!');
