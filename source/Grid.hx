@@ -95,7 +95,7 @@ class Grid extends FlxSprite
 
     public function addFallingTile(column:Int)
     {
-        var tile:GridTile = new LetterTile(this, column, 0, randomLetter(), playState);
+        var tile:GridTile = new LetterTile(this, column, 0, randomLetter());
         fallingTiles.add(tile);
         playState.add(tile);
     }

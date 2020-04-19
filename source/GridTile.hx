@@ -1,13 +1,14 @@
 package;
 
 import flixel.FlxSprite;
+import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.text.FlxText;
 
-class GridTile extends FlxSprite
+class GridTile extends FlxSpriteGroup
 {
     public var grid:Grid;
     public var gridX:Int;
@@ -67,16 +68,19 @@ class GridTile extends FlxSprite
 class LetterTile extends GridTile 
 {    
     var letterText:FlxText; 
-    var playState:PlayState;
-    public function new(grid:Grid, gridX:Int, gridY:Int, letter:String, ps:PlayState)
+    var letterTileSprite:FlxSprite;
+    public function new(grid:Grid, gridX:Int, gridY:Int, letter:String)
     {
         super(grid, gridX, gridY);
-        playState = ps;
-        makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.fromRGB(255,255,0,100));
+        letterTileSprite = new FlxSprite();
+        letterTileSprite.makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.fromRGB(255,255,0,100));
+        letterTileSprite.x = gridX;
+        letterTileSprite.y = gridY;
+        add(letterTileSprite);
         letterText = new FlxText(gridX,gridY,0, letter);
         letterText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
         letterText.width += 10;
-        playState.add(letterText);
+        add(letterText);
     }
 
     public override function update(elapsed:Float)
@@ -85,8 +89,6 @@ class LetterTile extends GridTile
             color = 0xff0000;
         else
             color = 0xffffff;
-        letterText.y = letterText.y + elapsed * Registry.FALL_SPEED;
-        playState.add(letterText);
         super.update(elapsed);
     }
 }
