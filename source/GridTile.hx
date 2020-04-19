@@ -5,6 +5,7 @@ import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
+import flixel.text.FlxText;
 
 class GridTile extends FlxSprite
 {
@@ -49,23 +50,25 @@ class GridTile extends FlxSprite
 }
 
 class LetterTile extends GridTile 
-{
-    public function new(grid:Grid, gridX:Int, gridY:Int, letter:String)
+{    
+    var letterText:FlxText; 
+    var playState:PlayState;
+    public static var FALL_SPEED:Int = 5;
+    public function new(grid:Grid, gridX:Int, gridY:Int, letter:String, ps:PlayState)
     {
         super(grid, gridX, gridY);
+        playState = ps;
         makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.YELLOW);
-        // switch(type)
-        // {
-        //     case Game.FieldType.FLOOR:
-        //         loadGraphic(AssetPaths.grass_small__png);
-        //     case Game.FieldType.WALL:
-        //         loadGraphic(AssetPaths.grass_wall__png);
-        //     case Game.FieldType.RED_GOAL:
-        //         loadGraphic(AssetPaths.grass_red_goal__png);
-        //     case Game.FieldType.BLUE_GOAL:
-        //         loadGraphic(AssetPaths.grass_blue_goal__png);
-        //     default:
-        //         loadGraphic(AssetPaths.grass_small__png);
-        // }
+        letterText = new FlxText(gridX,gridY,0, letter);
+        letterText.setFormat(AssetPaths.Action_Man__ttf, 172, FlxColor.RED, FlxTextAlign.CENTER);
+        letterText.width += 10;
+        playState.add(letterText);
+    }
+
+    public override function update(elapsed:Float)
+    {
+        letterText.y = letterText.y + elapsed * FALL_SPEED;
+        playState.add(letterText);
+        super.update(elapsed);
     }
 }
