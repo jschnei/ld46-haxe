@@ -48,8 +48,7 @@ class Grid extends FlxSprite
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
-        trace(Date.now());
-        rand = new FlxRandom(Std.int(Date.now().getTime()));
+        rand = new FlxRandom(Std.int(Date.now().getTime()/1000));
         timer = 0.0;
 
         this.playState = playState;
