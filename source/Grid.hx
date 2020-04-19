@@ -118,6 +118,8 @@ class Grid extends FlxSprite
 
         // align to grid
         gridTile.setPosition(x + Grid.CELL_WIDTH * gridX, y + Grid.CELL_HEIGHT * gridY);
+        gridTile.gridX = gridX;
+        gridTile.gridY = gridY;
 
         // insert in gridTiles
         gridTiles[squareId(gridX, gridY)] = gridTile;
