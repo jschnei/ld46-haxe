@@ -8,7 +8,7 @@ import flixel.util.FlxSpriteUtil;
 
 class GridTile extends FlxSprite
 {
-    public static var FALL_SPEED:Int = 5;
+    public static var FALL_SPEED:Int = 200; //= 50;
 
     public var grid:Grid;
     public var gridX:Int;
@@ -36,7 +36,24 @@ class GridTile extends FlxSprite
         if (falling) 
         {
             velocity.y = FALL_SPEED;
-        } else {
+
+            var topTile = grid.columnTop(gridX);
+            var dy = y - grid.y;
+            if (dy >= (topTile - 1) * Grid.CELL_HEIGHT) 
+            {
+                if (topTile - 1 >= 0)
+                {
+                    grid.insertTile(this, gridX, topTile-1);
+                } else{
+                    // this block is stuck off the top
+                    trace("oh no!");
+                    velocity.y = 0;
+                    falling = false;
+                }
+            }
+        } 
+        else 
+        {
             velocity.y = 0;
         }
     }
@@ -54,19 +71,6 @@ class LetterTile extends GridTile
     {
         super(grid, gridX, gridY);
         makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.YELLOW);
-        // switch(type)
-        // {
-        //     case Game.FieldType.FLOOR:
-        //         loadGraphic(AssetPaths.grass_small__png);
-        //     case Game.FieldType.WALL:
-        //         loadGraphic(AssetPaths.grass_wall__png);
-        //     case Game.FieldType.RED_GOAL:
-        //         loadGraphic(AssetPaths.grass_red_goal__png);
-        //     case Game.FieldType.BLUE_GOAL:
-        //         loadGraphic(AssetPaths.grass_blue_goal__png);
-        //     default:
-        //         loadGraphic(AssetPaths.grass_small__png);
-        // }
     }
 
     override public function update(elapsed:Float):Void 
