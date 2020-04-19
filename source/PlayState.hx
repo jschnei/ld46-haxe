@@ -10,16 +10,11 @@ import flixel.util.FlxColor;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxBackdrop;
 import haxe.io.Eof;
-import sys.io.File;
-import sys.io.FileInput;
-import sys.io.FileOutput;
 
 class PlayState extends FlxState
 {
 
     public var _grid:Grid;
-    public var wordList:Array<String>;
-    public var dictFile:FileInput;
     // var background:FlxBackdrop;
 	// public var currentControlMode:ControlMode.ControlMode;
 	// public var topControlMode:ControlMode.SelectionControlMode;
@@ -46,19 +41,7 @@ class PlayState extends FlxState
 
 		FlxG.camera.focusOn(new FlxPoint(Grid.CELL_WIDTH * _grid.gridWidth/2, Grid.CELL_HEIGHT * _grid.gridHeight/2));
 
-        wordList = [];
-        dictFile = File.read(AssetPaths.wordlist__txt);
-        try
-        {
-        trace("file content:");
-        while( true )
-        {
-            wordList.push(dictFile.readLine());
-        }
-        }
-        catch( ex:haxe.io.Eof ) 
-        {}
-        dictFile.close();
+		Registry.initializeWordList();
 
 		super.create();
 	}	
