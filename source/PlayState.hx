@@ -67,7 +67,7 @@ class PlayState extends FlxState
 			_grid.clearSelectedPath();
 		}
 
-		NetworkingUtils.ws.process();
+		NetworkingUtils.process();
 	}
 
 
