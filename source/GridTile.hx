@@ -9,8 +9,6 @@ import flixel.text.FlxText;
 
 class GridTile extends FlxSprite
 {
-    public static var FALL_SPEED:Int = 200; //= 50;
-
     public var grid:Grid;
     public var gridX:Int;
     public var gridY:Int;
@@ -36,7 +34,7 @@ class GridTile extends FlxSprite
     {
         if (falling) 
         {
-            velocity.y = FALL_SPEED;
+            velocity.y = Registry.FALL_SPEED;
 
             var topTile = grid.columnTop(gridX);
             var dy = y - grid.y;
@@ -70,14 +68,13 @@ class LetterTile extends GridTile
 {    
     var letterText:FlxText; 
     var playState:PlayState;
-    public static var FALL_SPEED:Int = 200;
     public function new(grid:Grid, gridX:Int, gridY:Int, letter:String, ps:PlayState)
     {
         super(grid, gridX, gridY);
         playState = ps;
-        makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.YELLOW);
+        makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.fromRGB(255,255,0,100));
         letterText = new FlxText(gridX,gridY,0, letter);
-        letterText.setFormat(AssetPaths.Action_Man__ttf, 172, FlxColor.RED, FlxTextAlign.CENTER);
+        letterText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
         letterText.width += 10;
         playState.add(letterText);
     }
@@ -88,7 +85,7 @@ class LetterTile extends GridTile
             color = 0xff0000;
         else
             color = 0xffffff;
-        letterText.y = letterText.y + elapsed * FALL_SPEED;
+        letterText.y = letterText.y + elapsed * Registry.FALL_SPEED;
         playState.add(letterText);
         super.update(elapsed);
     }
