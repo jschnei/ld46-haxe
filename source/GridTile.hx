@@ -75,10 +75,8 @@ class LetterTile extends GridTile
         super(grid, gridX, gridY);
         letterTileSprite = new FlxSprite();
         letterTileSprite.makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.fromRGB(255,255,0,100));
-        letterTileSprite.x = gridX;
-        letterTileSprite.y = gridY;
         add(letterTileSprite);
-        letterText = new FlxText(gridX,gridY,0, letter);
+        letterText = new FlxText(0, 0, 0, letter);
         letterText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
         letterText.width = Registry.GRID_SIZE;
         add(letterText);
