@@ -100,6 +100,8 @@ async def counter(websocket, path):
                     board = data['message']
                     BOARDS[name] = board
                     await notify_room(sync_message(name, board), room)
+                elif data["type"] == "die":
+                    await notify_room(leave_message(name), room)
                 else:
                     logging.error("unsupported event type: {}", data)
             except Exception as e:

@@ -38,7 +38,7 @@ class PlayState extends FlxState
 		_miniGrid = new MiniGrid(this, 
 								 Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT,
 								 -250, 50);
-		_miniGrid.trackPlayer(Registry.curGame.self.tracking);
+		_miniGrid.trackPlayer(Registry.curGame.self.trackNext);
 		add(_miniGrid);
 
 		FlxG.camera.focusOn(new FlxPoint(Grid.CELL_WIDTH * _grid.gridWidth/2, Grid.CELL_HEIGHT * _grid.gridHeight/2));
@@ -52,6 +52,8 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		// currentControlMode.doInput();
+
+		if (!Registry.curGame.alive) return;
 
         if(FlxG.mouse.pressed)
 		{

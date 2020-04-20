@@ -97,6 +97,8 @@ class Grid extends FlxSpriteGroup
 
     override public function update(elapsed:Float):Void
     {
+        if (!Registry.curGame.alive) return;
+
         totalTime += elapsed;
         for (gridTile in selectedPath)
         {
@@ -353,6 +355,7 @@ class Grid extends FlxSpriteGroup
                 if (y < numRows)
                 {
                     trace("uh oh!!! you are dead");
+                    
                 }
                 else
                 {

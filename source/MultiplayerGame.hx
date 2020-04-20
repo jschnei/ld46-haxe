@@ -9,6 +9,7 @@ class MultiplayerGame {
     public var self:PlayerInfo;
 
     public var started:Bool = false;
+    public var alive:Bool = true;
 
     public function new()
     {
@@ -33,7 +34,25 @@ class MultiplayerGame {
 
     public function removePlayer(playerName)
     {
+        var player = players.get(playerName);
+        if (player != null)
+        {
+            var prevPlayer = player.trackPrev;
+            var nextPlayer = player.trackNext;
+            if (prevPlayer != null && nextPlayer != null)
+            {
+                prevPlayer.setTrackNext(nextPlayer);
+                nextPlayer.setTrackPrev(prevPlayer);
+            }
+        }
+
         players.remove(playerName);
+    }
+
+    public function die()
+    {
+        alive = false;
+        NetworkingUtils.sendMessage("die");
     }
 
     public function startGame()
@@ -45,9 +64,11 @@ class MultiplayerGame {
         playerNames.sort(Reflect.compare);
 
         for (i in 1...playerNames.length) {
-            players[playerNames[i]].setTracking(players[playerNames[i-1]]);
+            players[playerNames[i]].setTrackPrev(players[playerNames[i-1]]);
+            players[playerNames[i-1]].setTrackNext(players[playerNames[i]]);
         }
-        players[playerNames[0]].setTracking(players[playerNames[playerNames.length - 1]]);
+        players[playerNames[0]].setTrackPrev(players[playerNames[playerNames.length - 1]]);
+        players[playerNames[playerNames.length - 1]].setTrackNext(players[playerNames[0]]);
     }
 
     public function updateBoard(playerName:String, board:String)

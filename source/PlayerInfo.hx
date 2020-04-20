@@ -11,10 +11,10 @@ class PlayerInfo
     public var name:String;
     public var board:String;
 
-    public var alive:Bool = true;
     public var self:Bool = false;
 
-    public var tracking:PlayerInfo;
+    public var trackNext:PlayerInfo;
+    public var trackPrev:PlayerInfo;
 
     public function new(name:String, ?self:Bool=false)
     {
@@ -27,10 +27,16 @@ class PlayerInfo
         this.board = board;
     }
 
-    public function setTracking(tracking:PlayerInfo)
+    public function setTrackNext(tracking:PlayerInfo)
     {
-        if (tracking != this)
-            this.tracking = tracking;
+        if (trackNext != this)
+            this.trackNext = tracking;
+    }
+
+    public function setTrackPrev(tracking:PlayerInfo)
+    {
+        if (trackPrev != this)
+            this.trackPrev = tracking;
     }
 
 }
