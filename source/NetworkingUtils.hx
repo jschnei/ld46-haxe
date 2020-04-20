@@ -19,7 +19,8 @@ class NetworkingUtils {
         players = new Map<String, PlayerInfo>();
         playerBoards = new Map<String, String>();
 
-        ws = new WebSocket("ws://localhost:9999/");
+        // ws = new WebSocket("ws://localhost:9999/");
+        ws = new WebSocket("ws://slime.jschnei.com:9999/");
         ws.onopen = function() 
         {
             trace('open!');
