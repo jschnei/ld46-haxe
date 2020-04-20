@@ -14,6 +14,8 @@ class PlayerInfo
     public var alive:Bool = true;
     public var self:Bool = false;
 
+    public var tracking:PlayerInfo;
+
     public function new(name:String, ?self:Bool=false)
     {
         this.name = name;
@@ -23,6 +25,12 @@ class PlayerInfo
     public function setBoard(board:String)
     {
         this.board = board;
+    }
+
+    public function setTracking(tracking:PlayerInfo)
+    {
+        if (tracking != this)
+            this.tracking = tracking;
     }
 
 }

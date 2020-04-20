@@ -22,9 +22,6 @@ class PlayState extends FlxState
 	override public function create():Void
 	{	
 		bgColor = new FlxColor(0xff303030);
-        // background = new FlxBackdrop(AssetPaths.grass_dark__png);
-        // add(background);
-		// Registry.init();
 
 		_grid = new Grid(Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT);
 		for(tile in _grid.gridTiles)
@@ -44,10 +41,6 @@ class PlayState extends FlxState
 		add(_miniGrid);
 
 		FlxG.camera.focusOn(new FlxPoint(Grid.CELL_WIDTH * _grid.gridWidth/2, Grid.CELL_HEIGHT * _grid.gridHeight/2));
-
-		Registry.initializeWordList();
-		Randomizer.intialize();
-		NetworkingUtils.initialize();
 
 		super.create();
 	}	

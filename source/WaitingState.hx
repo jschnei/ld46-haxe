@@ -49,6 +49,16 @@ class WaitingState extends FlxState
             update_lobby_timer = 0;
         }
 
+        if (Registry.curGame.started)
+        {
+            FlxG.switchState(new PlayState());
+        }
+
+        if (FlxG.keys.justPressed.P)
+        {
+            NetworkingUtils.sendMessage("start");
+        }
+
         super.update(elapsed);
     }
 

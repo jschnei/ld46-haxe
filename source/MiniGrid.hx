@@ -52,7 +52,7 @@ class MiniGrid extends FlxSprite
         {
             updateTimer = 0;
             
-            var boardString = NetworkingUtils.getTrackedBoard();
+            var boardString = Registry.curGame.getTrackedBoard();
             if (boardString != null && boardString.length == gridWidth * gridHeight)
             {
                 updateBoard(boardString);

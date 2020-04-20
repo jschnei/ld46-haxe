@@ -64,6 +64,8 @@ class NetworkingUtils {
                 processLeaveMessage(messageObject);
             case "sync":
                 processSyncMessage(messageObject);
+            case "start":
+                processStartMessage(messageObject);
             case "players":
                 processPlayersMessage(messageObject);
             
@@ -81,6 +83,11 @@ class NetworkingUtils {
     {
         var playerName:String = message.name;
         Registry.curGame.removePlayer(playerName);
+    }
+
+    public static function processStartMessage(message:Dynamic)
+    {
+        Registry.curGame.startGame();
     }
 
     public static function processPlayersMessage(message:Dynamic)
