@@ -79,11 +79,13 @@ class LetterTile extends GridTile
     {
         super(grid, gridX, gridY);
         letterTileSprite = new FlxSprite();
-        letterTileSprite.makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.fromRGB(255,255,0,255));
+        letterTileSprite.makeGraphic(Grid.CELL_WIDTH, Grid.CELL_HEIGHT, FlxColor.TRANSPARENT);
+        FlxSpriteUtil.drawRoundRect(letterTileSprite, 0, 0, Grid.CELL_WIDTH, Grid.CELL_HEIGHT, 10, 10, FlxColor.fromRGB(0,255,255,255));
+        FlxSpriteUtil.drawRoundRect(letterTileSprite, 4, 4, Grid.CELL_WIDTH-8, Grid.CELL_HEIGHT-8, 10, 10, FlxColor.fromRGB(0,200,200,255));
         add(letterTileSprite);
-        letterText = new FlxText(0, 0, 0, letter);
-        letterText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.BLACK, FlxTextAlign.CENTER);
-        letterText.width = Registry.GRID_SIZE;
+        letterText = new FlxText(7, 5, 0, letter);
+        letterText.setFormat(AssetPaths.Action_Man__ttf, 70, FlxColor.BLACK, FlxTextAlign.CENTER);
+        letterText.width = Grid.CELL_WIDTH;
         add(letterText);
         
         this.letter = letter;
@@ -92,9 +94,9 @@ class LetterTile extends GridTile
     public override function update(elapsed:Float)
     {
         if (selected)
-            letterTileSprite.color = 0xff0000;
+            letterTileSprite.color = FlxColor.fromRGB(0,100,100,255);
         else
-            letterTileSprite.color = 0xffffff;
+            letterTileSprite.color = FlxColor.fromRGB(0,255,255,255);
         super.update(elapsed);
     }
 
