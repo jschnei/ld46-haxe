@@ -31,6 +31,7 @@ class MiniGrid extends FlxSpriteGroup
 
     public var gridSprite:FlxSprite;
     public var letterSprites:Array<FlxSprite>;
+    public var usernameText:FlxText;
 
     public function new(playState:PlayState, width:Int, height:Int, ?X:Float=0, ?Y:Float=0)
     {
@@ -71,6 +72,10 @@ class MiniGrid extends FlxSpriteGroup
         var emptyBoardString = "";
         for (i in 0...gridWidth*gridHeight) emptyBoardString += "0";
         updateBoard(emptyBoardString);
+
+        usernameText = new FlxText(0, gridHeight*CELL_HEIGHT + 20);
+        usernameText.setFormat(AssetPaths.Action_Man__ttf, 20, FlxColor.RED, FlxTextAlign.CENTER);
+        add(usernameText);
     }
 
     public override function update(elapsed:Float)
@@ -90,6 +95,11 @@ class MiniGrid extends FlxSpriteGroup
             {
                 trace("not tracking anything");
             }
+        }
+        if (tracking != null)
+        {
+            usernameText.text = tracking.name;
+            usernameText.x = this.x + (gridWidth*CELL_WIDTH - usernameText.width) / 2;
         }
         super.update(elapsed);
     }
