@@ -18,7 +18,7 @@ class Registry
     public static var TILE_PERIOD = 1;
 
     // # of blocks per second initially
-    public static var START_FREQ = 0.5;
+    public static var START_FREQ = 2;
     // Current frequency is START_FREQ+(time elapsed in seconds)*FREQ_SCALING.
     // See Grid.update for details.
     public static var FREQ_SCALING = .01;

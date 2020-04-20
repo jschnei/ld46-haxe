@@ -19,9 +19,7 @@ class StatusHUD extends FlxSpriteGroup
 
     public override function update(elapsed:Float)
     {
-        var totalPlayers = Registry.curGame.startingPlayerCount;
-        var remainingPlayers = totalPlayers - Registry.curGame.deadPlayers.length;
-        deadCountText.text = "Players remaining: " + remainingPlayers + "/" + totalPlayers;
+        deadCountText.text = "Players remaining: " + Registry.curGame.numRemainingPlayers() + "/" + Registry.curGame.startingPlayerCount;
         super.update(elapsed);
     }
 }

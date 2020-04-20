@@ -111,4 +111,8 @@ class MultiplayerGame {
         return ret;
     }
 
+    public function numRemainingPlayers():Int
+    {
+        return startingPlayerCount - deadPlayers.length;
+    }
 }

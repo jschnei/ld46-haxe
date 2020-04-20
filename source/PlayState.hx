@@ -57,6 +57,8 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		// currentControlMode.doInput();
+		if (Registry.curGame.numRemainingPlayers() == 0)
+			FlxG.switchState(new ResultsState());
 
 		if (!Registry.curGame.alive) return;
 
