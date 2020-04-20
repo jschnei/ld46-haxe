@@ -12,53 +12,78 @@ logging.basicConfig()
 BOARDS = {}
 
 USERS = set()
+SOCKET_TO_NAME = dict()
+NAME_TO_SOCKET = dict()
 
-def users_event():
-    return json.dumps({"type": "users", "count": len(USERS)})
+STARTED = False
 
-async def notify_sync(name, board):
-    message = json.dumps({"type": "sync", 
-                          "name": name,
-                          "board": board})
-    if USERS:  # asyncio.wait doesn't accept an empty list
+def players_message():
+    return json.dumps({"type": "players", 
+                       "players": ",".join(list(NAME_TO_SOCKET.keys()))})
+
+def join_message(name):
+    return json.dumps({"type": "join", "name": name})
+
+def leave_message(name):
+    return json.dumps({"type": "leave", "name": name})
+
+def sync_message(name, board):
+    return json.dumps({"type": "sync", 
+                       "name": name,
+                       "board": board})
+
+def start_message():
+    return json.dumps({"type": "start"})
+
+async def notify_all(message):
+    if USERS:
         await asyncio.wait([user.send(message) for user in USERS])
 
-
-async def notify_users():
-    if USERS:  # asyncio.wait doesn't accept an empty list
-        message = users_event()
-        await asyncio.wait([user.send(message) for user in USERS])
-
+async def notify_user(message, user):
+    await asyncio.wait([user.send(message)])
 
 async def register(websocket):
     USERS.add(websocket)
-    await notify_users()
+    await notify_user(players_message(), websocket)
 
 
 async def unregister(websocket):
+    name = SOCKET_TO_NAME[websocket]
     USERS.remove(websocket)
-    await notify_users()
+
+    del SOCKET_TO_NAME[websocket]
+    del NAME_TO_SOCKET[name]
+    
+    await notify_all(leave_message(name))
 
 
 async def counter(websocket, path):
     # register(websocket) sends user_event() to websocket
     await register(websocket)
     try:
-        # await websocket.send(users_event())
         async for message in websocket:
             data = json.loads(message)
-            print(data)
+            print(message)
             if data["type"] == "word":
                 pass
+            elif data["type"] == "join":
+                name = data["name"]
+                SOCKET_TO_NAME[websocket] = name
+                NAME_TO_SOCKET[name] = websocket
+
+                await notify_all(join_message(name))
+            elif data["type"] == "start":
+                STARTED = True
+                await notify_all(start_message())
+
             elif data["type"] == "sync":
                 name = data["name"]
                 board = data["message"]
 
                 BOARDS[name] = board
-                await notify_sync(name, board)
-                pass
+                await notify_all(sync_message(name, board))
             else:
-                logging.error("unsupported event: {}", data)
+                logging.error("unsupported event type: {}", data)
     finally:
         await unregister(websocket)
 
