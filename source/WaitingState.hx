@@ -24,6 +24,7 @@ class WaitingState extends FlxState
 	
 	override public function create():Void
 	{	
+        FlxG.autoPause = false;
 		bgColor = new FlxColor(0xff303030);
 
         Randomizer.initialize();
