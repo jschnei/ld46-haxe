@@ -3,7 +3,10 @@ import haxe.DynamicAccess;
 import haxe.Json;
 
 class MultiplayerGame {
+    public var startingPlayerCount:Int = 0;
     public var players:Map<String, PlayerInfo>;
+    // Ordered by time of death.
+    public var deadPlayers:Array<PlayerInfo>;
     public var myName:String;
 
     public var self:PlayerInfo;
@@ -14,6 +17,7 @@ class MultiplayerGame {
     public function new()
     {
         players = new Map<String, PlayerInfo>();
+        deadPlayers = new Array<PlayerInfo>();
 
         myName = Randomizer.getName();
         self = new PlayerInfo(myName, true);
@@ -45,22 +49,33 @@ class MultiplayerGame {
                 nextPlayer.setTrackPrev(prevPlayer);
             }
         }
-
+        var playerAlreadyDead = false;
+        for (playerInfo in deadPlayers)
+            if (playerInfo.name == playerName)
+            {
+                playerAlreadyDead = true;
+                break;
+            }
+        if (!playerAlreadyDead)
+            deadPlayers.push(player);
         players.remove(playerName);
     }
 
     public function die()
     {
-        alive = false;
-        NetworkingUtils.sendMessage("die");
+        if (alive)
+        {
+            alive = false;
+            NetworkingUtils.sendMessage("die");
+        }
     }
 
     public function startGame()
     {
         started = true;
-
         // order the players and set tracking
         var playerNames:Array<String> = getCurrentPlayers();
+        startingPlayerCount = playerNames.length;
         playerNames.sort(Reflect.compare);
 
         for (i in 1...playerNames.length) {

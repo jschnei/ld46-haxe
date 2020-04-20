@@ -16,6 +16,7 @@ class PlayState extends FlxState
 
 	public var _grid:Grid;
 	public var _miniGrid:MiniGrid;
+	public var _statusHud:StatusHUD;
     // var background:FlxBackdrop;
 	// public var currentControlMode:ControlMode.ControlMode;
 	// public var topControlMode:ControlMode.SelectionControlMode;
@@ -41,6 +42,9 @@ class PlayState extends FlxState
 								 -250, 50);
 		_miniGrid.trackPlayer(Registry.curGame.self.trackNext);
 		add(_miniGrid);
+
+		_statusHud = new StatusHUD(400, 250);
+		add(_statusHud);
 
 		FlxG.camera.focusOn(new FlxPoint(Grid.CELL_WIDTH * _grid.gridWidth/2, Grid.CELL_HEIGHT * _grid.gridHeight/2));
 
