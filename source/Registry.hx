@@ -23,6 +23,13 @@ class Registry
     public static var WORD_LIST:IntHashSet;
 
     public static var rand:Randomizer;
+    public static var curGame:MultiplayerGame;
+
+    public static function initializeGame()
+    {
+        if (curGame == null) 
+            curGame = new MultiplayerGame();
+    }
 
     public static var word_prime = 14821; 
     public static function signature(word:String):Int
@@ -48,18 +55,7 @@ class Registry
             if (word.length >= 3)
                 WORD_LIST.set(signature(word));
         }
-        // WORD_LIST = WORD_LIST.map(function(str) return str.trim());
 
-        // try
-        // {
-        //     trace("file content:");
-        //     while( true )
-        //     {
-        //         WORD_LIST.push(dictFile.readLine());
-        //     }
-        // }
-        // catch( ex:haxe.io.Eof ) 
-        // {}
     }
 
     public static function isWord(word:String): Bool 

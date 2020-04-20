@@ -10,25 +10,20 @@ class NetworkingUtils {
     public static var ws:WebSocket;
     public static var isOpen:Bool = true;
 
-    public static var name:String;
-
+    public static var players:Map<String, PlayerInfo>;
     public static var playerBoards:Map<String, String>;
     public static var track:String = "";
 
     public static function initialize() 
-    {   
-        // ws = WebSocket.create("ws://echo.websocket.org", ['echo-protocol'], false);
-        // ws = new WebSocket("ws://echo.websocket.org"); 
-        name = Randomizer.getName();
-        trace('name:', name);
-
+    {
+        players = new Map<String, PlayerInfo>();
         playerBoards = new Map<String, String>();
 
         ws = new WebSocket("ws://localhost:9999/");
         ws.onopen = function() 
         {
             trace('open!');
-            // ws.send('hello friend!');
+            sendMessage("join");
         };
         
         ws.onclose = function() 
@@ -40,13 +35,14 @@ class NetworkingUtils {
         ws.onmessage = onMessage;
     }
 
-    public static function sendMessage(type: String, message: String)
+    public static function sendMessage(type: String, ?message: String = "")
     {
+        trace("sending message type", type);
         if (isOpen)
         {
             var messageBlob:Dynamic<String> = {};
             messageBlob.type = type;
-            messageBlob.name = name;
+            messageBlob.name = Registry.curGame.myName;
             messageBlob.message = message;
             ws.send(Json.stringify(messageBlob));
         }
@@ -58,42 +54,58 @@ class NetworkingUtils {
         trace(message.data);
         var messageObject = Json.parse(message.data);
 
+        trace("incoming message type", messageObject.type);
+
         switch (messageObject.type)
         {
+            case "join":
+                processJoinMessage(messageObject);
+            case "leave":
+                processLeaveMessage(messageObject);
             case "sync":
                 processSyncMessage(messageObject);
-                trace("sync message");
-            case "state":
-                trace("state message");
-            case "users":
-                trace("users message");
+            case "start":
+                processStartMessage(messageObject);
+            case "players":
+                processPlayersMessage(messageObject);
             
+        }
+    }
+
+    public static function processJoinMessage(message:Dynamic)
+    {
+        var playerName:String = message.name;
+
+        Registry.curGame.addPlayer(playerName);
+    }
+
+    public static function processLeaveMessage(message:Dynamic)
+    {
+        var playerName:String = message.name;
+        Registry.curGame.removePlayer(playerName);
+    }
+
+    public static function processStartMessage(message:Dynamic)
+    {
+        Registry.curGame.startGame();
+    }
+
+    public static function processPlayersMessage(message:Dynamic)
+    {
+        var existingPlayers:Array<String> = message.players.split(",");
+        for (playerName in existingPlayers)
+        {
+            Registry.curGame.addPlayer(playerName);
         }
     }
 
     public static function processSyncMessage(message:Dynamic)
     {
-        var msg_name:String = message.name;
+        var playerName:String = message.name;
         var board:String = message.board;
 
-        trace('msg_name', msg_name);
-        trace('board', board);
-
-        // if we are not tracking anything and see a name 
-        // that isn't ours, track it
-        if (track == "" && msg_name != name)
-        {
-            track = msg_name;
-            trace("now tracking", track);
-        }
-
-        playerBoards.set(msg_name, board);
+        Registry.curGame.updateBoard(playerName, board);
     }
 
-    public static function getTrackedBoard():String 
-    {
-        if (playerBoards.exists(track))
-            return playerBoards.get(track);
-        return "";
-    }
+
 }
