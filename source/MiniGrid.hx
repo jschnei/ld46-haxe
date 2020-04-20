@@ -24,6 +24,8 @@ class MiniGrid extends FlxSprite
     public var cellHeight:Int = Registry.GRID_SIZE;
     public var cellWidth:Int = Registry.GRID_SIZE;
 
+    public var tracking:PlayerInfo;
+
     public var updateTimer:Float = 0;
     public static var UPDATE_FREQ:Float = 1.5;
 
@@ -52,16 +54,22 @@ class MiniGrid extends FlxSprite
         {
             updateTimer = 0;
             
-            var boardString = Registry.curGame.getTrackedBoard();
-            if (boardString != null && boardString.length == gridWidth * gridHeight)
+            if (tracking != null &&
+                tracking.board != null &&
+                tracking.board.length == gridWidth * gridHeight)
             {
-                updateBoard(boardString);
+                updateBoard(tracking.board);
             }
             else
             {
                 trace("not tracking anything");
             }
         }
+    }
+
+    public function trackPlayer(playerInfo:PlayerInfo)
+    {
+        tracking = playerInfo;
     }
 
     public function updateBoard(boardString:String)

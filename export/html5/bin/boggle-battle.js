@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","96");
+		_this.setReserved("build","99");
 	} else {
-		_this.h["build"] = "96";
+		_this.h["build"] = "99";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -8846,21 +8846,24 @@ MiniGrid.prototype = $extend(flixel_FlxSprite.prototype,{
 	,gridWidth: null
 	,cellHeight: null
 	,cellWidth: null
+	,tracking: null
 	,updateTimer: null
 	,update: function(elapsed) {
 		this.updateTimer += elapsed;
 		if(this.updateTimer > MiniGrid.UPDATE_FREQ) {
 			this.updateTimer = 0;
-			var boardString = Registry.curGame.getTrackedBoard();
-			if(boardString != null && boardString.length == this.gridWidth * this.gridHeight) {
-				this.updateBoard(boardString);
+			if(this.tracking != null && this.tracking.board != null && this.tracking.board.length == this.gridWidth * this.gridHeight) {
+				this.updateBoard(this.tracking.board);
 			} else {
-				haxe_Log.trace("not tracking anything",{ fileName : "source/MiniGrid.hx", lineNumber : 62, className : "MiniGrid", methodName : "update"});
+				haxe_Log.trace("not tracking anything",{ fileName : "source/MiniGrid.hx", lineNumber : 65, className : "MiniGrid", methodName : "update"});
 			}
 		}
 	}
+	,trackPlayer: function(playerInfo) {
+		this.tracking = playerInfo;
+	}
 	,updateBoard: function(boardString) {
-		haxe_Log.trace("updating board",{ fileName : "source/MiniGrid.hx", lineNumber : 69, className : "MiniGrid", methodName : "updateBoard"});
+		haxe_Log.trace("updating board",{ fileName : "source/MiniGrid.hx", lineNumber : 77, className : "MiniGrid", methodName : "updateBoard"});
 		var _g = 0;
 		var _g1 = this.gridHeight;
 		while(_g < _g1) {
@@ -9727,6 +9730,7 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 		this.add(this._grid);
 		this.add(this._grid.currentWordText);
 		this._miniGrid = new MiniGrid(this,Registry.PLAYFIELD_WIDTH,Registry.PLAYFIELD_HEIGHT,-250,50);
+		this._miniGrid.trackPlayer(Registry.curGame.self.tracking);
 		this.add(this._miniGrid);
 		var _this = flixel_FlxG.camera;
 		var point = new flixel_math_FlxPoint(Grid.CELL_WIDTH * this._grid.gridWidth / 2,Grid.CELL_HEIGHT * this._grid.gridHeight / 2);
@@ -9950,89 +9954,23 @@ Registry.initializeGame = function() {
 		Registry.curGame = new MultiplayerGame();
 	}
 };
-Registry.signature = function(word) {
-	var ans = 0;
-	var _g = 0;
-	var _g1 = word.length;
-	while(_g < _g1) {
-		var i = _g++;
-		ans *= Registry.word_prime;
-		ans += HxOverrides.cca(word,i);
-	}
-	return ans;
-};
 Registry.initializeWordList = function() {
 	var dictString = openfl_utils_Assets.getText("assets/data/enable1.txt");
-	var words = dictString.split("\n");
-	Registry.WORD_LIST = new polygonal_ds_IntHashSet(100000);
-	var _g = 0;
-	while(_g < words.length) {
-		var word = words[_g];
-		++_g;
-		if(word.length >= 3) {
-			var _this = Registry.WORD_LIST;
-			var val = Registry.signature(word);
-			var b = val * 73856093 & _this.mMask;
-			var d = _this.mData;
-			var j = _this.mHash[b];
-			if(j == -1) {
-				if(_this.mSize == _this.capacity) {
-					_this.grow();
-					d = _this.mData;
-				}
-				j = _this.mFree << 1;
-				_this.mFree = _this.mNext[_this.mFree];
-				_this.mHash[b] = j;
-				d[j] = val;
-				_this.mSize++;
-			} else if(d[j] != val) {
-				var p = d[j + 1];
-				while(p != -1) {
-					if(d[p] == val) {
-						j = -1;
-						break;
-					}
-					j = p;
-					p = d[p + 1];
-				}
-				if(j != -1) {
-					if(_this.mSize == _this.capacity) {
-						_this.grow();
-						d = _this.mData;
-					}
-					p = _this.mFree << 1;
-					_this.mFree = _this.mNext[_this.mFree];
-					d[p] = val;
-					d[j + 1] = p;
-					_this.mSize++;
-				}
-			}
-		}
-	}
+	Registry.WORD_LIST = dictString.split("\n");
 };
 Registry.isWord = function(word) {
-	var _this = Registry.WORD_LIST;
-	var val = Registry.signature(word);
-	var i = _this.mHash[val * 73856093 & _this.mMask];
-	if(i == -1) {
-		return false;
-	} else {
-		var d = _this.mData;
-		if(d[i] == val) {
-			return true;
+	var left = 0;
+	var right = Registry.WORD_LIST.length;
+	while(right - left > 1) {
+		var mid = left + right >> 1;
+		var mword = Registry.WORD_LIST[mid];
+		if(word >= mword) {
+			left = mid;
 		} else {
-			var exists = false;
-			i = d[i + 1];
-			while(i != -1) {
-				if(d[i] == val) {
-					exists = true;
-					break;
-				}
-				i = d[i + 1];
-			}
-			return exists;
+			right = mid;
 		}
 	}
+	return Registry.WORD_LIST[left] == word;
 };
 var Std = function() { };
 $hxClasses["Std"] = Std;
@@ -10470,7 +10408,9 @@ WaitingState.prototype = $extend(flixel_FlxState.prototype,{
 		Randomizer.initialize();
 		Registry.initializeGame();
 		Registry.initializeWordList();
+		haxe_Log.trace("waiting...",{ fileName : "source/WaitingState.hx", lineNumber : 33, className : "WaitingState", methodName : "create"});
 		NetworkingUtils.initialize();
+		haxe_Log.trace("waited",{ fileName : "source/WaitingState.hx", lineNumber : 35, className : "WaitingState", methodName : "create"});
 		this._name_label = new flixel_text_FlxText(200,250);
 		this._name_label.setFormat("assets/data/Action_Man.ttf",30,-23296,"left");
 		this._name_label.set_text("Name: " + Registry.curGame.myName);
@@ -71114,7 +71054,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 709398;
+	this.version = 266158;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
@@ -119561,7 +119501,7 @@ MiniGrid.UPDATE_FREQ = 1.5;
 NetworkingUtils.isOpen = true;
 Randomizer.NAME_LENGTH = 8;
 Randomizer.COLUMN_FREQS = [0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4];
-Registry.SERVER_ADDRESS = "ws://slime.jschnei.com:9999/";
+Registry.SERVER_ADDRESS = "ws://localhost:9999/";
 Registry.PLAYFIELD_WIDTH = 5;
 Registry.PLAYFIELD_HEIGHT = 10;
 Registry.GRID_SIZE = 64;
@@ -119571,7 +119511,6 @@ Registry.alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"
 Registry.TILE_PERIOD = 1;
 Registry.START_FREQ = 0.5;
 Registry.FREQ_SCALING = .01;
-Registry.word_prime = 14821;
 WaitingState.UPDATE_LOBBY_FREQ = 0.5;
 Xml.Element = 0;
 Xml.PCData = 1;

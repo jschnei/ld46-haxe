@@ -6,8 +6,8 @@ import polygonal.ds.IntHashSet;
 
 class Registry
 {
-    public static var SERVER_ADDRESS = "ws://slime.jschnei.com:9999/";
-    // public static var SERVER_ADDRESS = "ws://localhost:9999/";
+    // public static var SERVER_ADDRESS = "ws://slime.jschnei.com:9999/";
+    public static var SERVER_ADDRESS = "ws://localhost:9999/";
 
     public static var PLAYFIELD_WIDTH = 5;
     public static var PLAYFIELD_HEIGHT = 10;
@@ -23,7 +23,7 @@ class Registry
     // See Grid.update for details.
     public static var FREQ_SCALING = .01;
 
-    public static var WORD_LIST:IntHashSet;
+    public static var WORD_LIST:Array<String>;
 
     public static var rand:Randomizer;
     public static var curGame:MultiplayerGame;
@@ -34,35 +34,31 @@ class Registry
             curGame = new MultiplayerGame();
     }
 
-    public static var word_prime = 14821; 
-    public static function signature(word:String):Int
-    {
-        var ans = 0;
-        for (i in 0...word.length)
-        {
-            ans *= word_prime;
-            ans += word.charCodeAt(i);
-        }
-
-        return ans;
-    }
-
     public static function initializeWordList()
     {
         var dictString:String = Assets.getText(AssetPaths.enable1__txt);
-        var words = dictString.split('\n');
-
-        WORD_LIST = new IntHashSet(100000);
-        for (word in words) 
-        {
-            if (word.length >= 3)
-                WORD_LIST.set(signature(word));
-        }
-
+        WORD_LIST = dictString.split('\n');
     }
 
     public static function isWord(word:String): Bool 
     {
-        return WORD_LIST.has(signature(word));
+        var left:Int = 0;
+        var right:Int = WORD_LIST.length;
+
+        while (right - left > 1)
+        {
+            var mid = (left + right) >> 1;
+            var mword = WORD_LIST[mid];
+            if (word >= mword)
+            {
+                left = mid;
+            }
+            else
+            {
+                right = mid;
+            }
+        }
+
+        return (WORD_LIST[left] == word);
     }
 }
