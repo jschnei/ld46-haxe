@@ -1,4 +1,6 @@
 export/*
+!export/html5
 *.DS_store
 vscode-project.hxml
 .vscode
+export/neko
