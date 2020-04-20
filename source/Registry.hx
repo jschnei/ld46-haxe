@@ -14,6 +14,11 @@ class Registry
     public static var alphabet:Array<String> = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
     public static var TILE_PERIOD = 1;
 
+    // # of blocks per second initially
+    public static var START_FREQ = 0.5;
+    // Current frequency is START_FREQ+(time elapsed in seconds)*FREQ_SCALING.
+    public static var FREQ_SCALING = .01;
+
     public static var WORD_LIST:IntHashSet;
 
     public static var rand:Randomizer;

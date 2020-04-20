@@ -34,8 +34,9 @@ class Grid extends FlxSpriteGroup
     public var selectedPath:Array<GridTile>;
     public var currentWordText:FlxText;
 
-    public static var NEW_TILE_FREQ = 1.0;
-    public var new_tile_timer:Float = 0;
+    public var newTilePeriod:Float = 0;
+    public var newTileTimer:Float = 0;
+    public var totalTime:Float = 0;
 
     public static var NETWORK_SYNC_FREQ = 1.5;
     public var network_sync_timer:Float = 0;
@@ -96,6 +97,7 @@ class Grid extends FlxSpriteGroup
 
     override public function update(elapsed:Float):Void
     {
+        totalTime += elapsed;
         for (gridTile in selectedPath)
         {
             gridTile.selected = true;
@@ -105,11 +107,12 @@ class Grid extends FlxSpriteGroup
         currentWordText.y = mouseHeldY - 180;
         currentWordText.x = mouseHeldX - (currentWordText.width / 2);
 
-        new_tile_timer += elapsed;
-        if (new_tile_timer > NEW_TILE_FREQ) 
+        newTileTimer += elapsed;
+        if (newTileTimer > newTilePeriod) 
         {
             addFallingTile(Randomizer.getColumn());
-            new_tile_timer = 0;
+            newTileTimer = 0;
+            newTilePeriod = 1/(Registry.START_FREQ + Registry.FREQ_SCALING * totalTime);
         }
 
         network_sync_timer += elapsed;
