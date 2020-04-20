@@ -66,7 +66,7 @@ async def unregister(websocket):
         room = NAME_TO_ROOM[name]
         ROOMS[room].remove(name)
         del NAME_TO_ROOM[name]
-    
+    # TODO: It seems like there's a potential issue if people in different rooms have the same name?
     await notify_all(leave_message(name))
 
 

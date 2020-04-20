@@ -20,7 +20,8 @@ class PlayState extends FlxState
 	// public var currentControlMode:ControlMode.ControlMode;
 	// public var topControlMode:ControlMode.SelectionControlMode;
 	override public function create():Void
-	{	
+	{
+		FlxG.autoPause = false;	
 		bgColor = new FlxColor(0xff303030);
 
 		_grid = new Grid(Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT);
