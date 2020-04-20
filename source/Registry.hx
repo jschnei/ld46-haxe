@@ -42,6 +42,8 @@ class Registry
 
     public static function isWord(word:String): Bool 
     {
+        if (word.length < 3) return false;
+
         var left:Int = 0;
         var right:Int = WORD_LIST.length;
 
