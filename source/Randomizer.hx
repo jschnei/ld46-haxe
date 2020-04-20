@@ -14,7 +14,7 @@ class Randomizer
                                                 4, 4 ,4, 4, 4];
     static var currentBag_:Array<Int>;
 
-    public static function intialize()
+    public static function initialize()
     {
         rand = new FlxRandom(Std.int(Date.now().getTime()/1000));
 

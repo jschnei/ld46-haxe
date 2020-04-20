@@ -17,14 +17,15 @@ class WaitingState extends FlxState
     var _lobby_users_label:FlxText;
 
     var update_lobby_timer:Float = 0;
-    public static var UPDATE_LOBBY_FREQ = 1.5;
+    public static var UPDATE_LOBBY_FREQ = 0.5;
 	
 	override public function create():Void
 	{	
 		bgColor = new FlxColor(0xff303030);
 
+        Randomizer.initialize();
+        Registry.initializeGame();
 		Registry.initializeWordList();
-		Randomizer.intialize();
         NetworkingUtils.initialize();
         
         _lobby_users_label = new FlxText(200, 150);
@@ -53,8 +54,10 @@ class WaitingState extends FlxState
 
     public function updateLobbyText()
     {
-        var users:Array<String> = NetworkingUtils.getCurrentPlayers();
+        var users:Array<String> = Registry.curGame.getCurrentPlayers();
         _lobby_users.text = users.join("\n");
     }
+
+
     
 }

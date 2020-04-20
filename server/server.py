@@ -36,10 +36,12 @@ def start_message():
     return json.dumps({"type": "start"})
 
 async def notify_all(message):
+    print("outgoing", message)
     if USERS:
         await asyncio.wait([user.send(message) for user in USERS])
 
 async def notify_user(message, user):
+    print("outgoing", message)
     await asyncio.wait([user.send(message)])
 
 async def register(websocket):
@@ -63,7 +65,7 @@ async def counter(websocket, path):
     try:
         async for message in websocket:
             data = json.loads(message)
-            print(message)
+            print("incoming:", message)
             if data["type"] == "word":
                 pass
             elif data["type"] == "join":

@@ -9,12 +9,15 @@ import flixel.util.FlxSave;
 class PlayerInfo
 {   
     public var name:String;
-    public var alive:Bool = true;
     public var board:String;
 
-    public function new(name:String)
+    public var alive:Bool = true;
+    public var self:Bool = false;
+
+    public function new(name:String, ?self:Bool=false)
     {
         this.name = name;
+        this.self = self;
     }
 
     public function setBoard(board:String)

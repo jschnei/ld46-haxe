@@ -10,17 +10,12 @@ class NetworkingUtils {
     public static var ws:WebSocket;
     public static var isOpen:Bool = true;
 
-    public static var name:String;
-
     public static var players:Map<String, PlayerInfo>;
     public static var playerBoards:Map<String, String>;
     public static var track:String = "";
 
     public static function initialize() 
-    {   
-        name = Randomizer.getName();
-        trace('name:', name);
-
+    {
         players = new Map<String, PlayerInfo>();
         playerBoards = new Map<String, String>();
 
@@ -47,7 +42,7 @@ class NetworkingUtils {
         {
             var messageBlob:Dynamic<String> = {};
             messageBlob.type = type;
-            messageBlob.name = name;
+            messageBlob.name = Registry.curGame.myName;
             messageBlob.message = message;
             ws.send(Json.stringify(messageBlob));
         }
@@ -79,17 +74,13 @@ class NetworkingUtils {
     {
         var playerName:String = message.name;
 
-        var player:PlayerInfo = new PlayerInfo(playerName);
-        players.set(playerName, player);
-
-        trace("added player", playerName);
+        Registry.curGame.addPlayer(playerName);
     }
 
     public static function processLeaveMessage(message:Dynamic)
     {
         var playerName:String = message.name;
-
-        players.remove(playerName);
+        Registry.curGame.removePlayer(playerName);
     }
 
     public static function processPlayersMessage(message:Dynamic)
@@ -97,48 +88,17 @@ class NetworkingUtils {
         var existingPlayers:Array<String> = message.players.split(",");
         for (playerName in existingPlayers)
         {
-            if (!players.exists(playerName))
-            {
-                var player = new PlayerInfo(playerName);
-                players.set(playerName, player);
-            }
+            Registry.curGame.addPlayer(playerName);
         }
     }
 
     public static function processSyncMessage(message:Dynamic)
     {
-        var msg_name:String = message.name;
+        var playerName:String = message.name;
         var board:String = message.board;
 
-        trace('msg_name', msg_name);
-        trace('board', board);
-
-        // if we are not tracking anything and see a name 
-        // that isn't ours, track it
-        if (track == "" && msg_name != name)
-        {
-            track = msg_name;
-            trace("now tracking", track);
-        }
-
-        playerBoards.set(msg_name, board);
+        Registry.curGame.updateBoard(playerName, board);
     }
 
-    public static function getTrackedBoard():String 
-    {
-        if (playerBoards.exists(track))
-            return playerBoards.get(track);
-        return "";
-    }
 
-    public static function getCurrentPlayers():Array<String>
-    {
-        var ret:Array<String> = new Array<String>();
-        for (user in players.keys())
-        {
-            ret.push(user);
-        }
-
-        return ret;
-    }
 }
