@@ -11,4 +11,10 @@ class NetworkingUtils {
     {
         
     }
+
+    public static function getTrackedBoard():String 
+    {
+        return "";
+    }
+    
 }

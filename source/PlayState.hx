@@ -14,7 +14,8 @@ import haxe.io.Eof;
 class PlayState extends FlxState
 {
 
-    public var _grid:Grid;
+	public var _grid:Grid;
+	public var _miniGrid:MiniGrid;
     // var background:FlxBackdrop;
 	// public var currentControlMode:ControlMode.ControlMode;
 	// public var topControlMode:ControlMode.SelectionControlMode;
@@ -25,7 +26,7 @@ class PlayState extends FlxState
         // add(background);
 		// Registry.init();
 
-		_grid = new Grid(this, Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT);
+		_grid = new Grid(Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT);
 		for(tile in _grid.gridTiles)
 		{
 			if (tile != null) 
@@ -36,6 +37,11 @@ class PlayState extends FlxState
 		
 		add(_grid);
 		add(_grid.currentWordText);
+
+		_miniGrid = new MiniGrid(this, 
+								 Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT,
+								 -250, 50);
+		add(_miniGrid);
 
 		FlxG.camera.focusOn(new FlxPoint(Grid.CELL_WIDTH * _grid.gridWidth/2, Grid.CELL_HEIGHT * _grid.gridHeight/2));
 
