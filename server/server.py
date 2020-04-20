@@ -97,7 +97,7 @@ async def counter(websocket, path):
                     await notify_room(start_message(), room)
 
                 elif data["type"] == "sync":
-                    BOARDS[name] = board
+                    BOARDS[name] = data['message']
                     await notify_room(sync_message(name, board), room)
                 else:
                     logging.error("unsupported event type: {}", data)
