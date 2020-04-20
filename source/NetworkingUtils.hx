@@ -1,26 +1,25 @@
 //import haxe.net.WebSocket;
+import js.html.URLSearchParams;
 import haxe.DynamicAccess;
 import haxe.Json;
 
+import js.Browser;
 import js.html.MessageEvent;
+import js.html.URL;
 import js.html.WebSocket;
-
 
 class NetworkingUtils {
     public static var ws:WebSocket;
     public static var isOpen:Bool = true;
 
-    public static var players:Map<String, PlayerInfo>;
-    public static var playerBoards:Map<String, String>;
-    public static var track:String = "";
+    public static var room:String;
 
     public static function initialize() 
     {
-        players = new Map<String, PlayerInfo>();
-        playerBoards = new Map<String, String>();
+        room = getRoomName();
+        trace("room name:", room);
 
-        // ws = new WebSocket("ws://localhost:9999/");
-        ws = new WebSocket("ws://slime.jschnei.com:9999/");
+        ws = new WebSocket(Registry.SERVER_ADDRESS);
         ws.onopen = function() 
         {
             trace('open!');
@@ -36,6 +35,21 @@ class NetworkingUtils {
         ws.onmessage = onMessage;
     }
 
+    public static function getRoomName()
+    {
+        var doc = Browser.window.document;
+        var url:URL = new URL(doc.URL);
+        
+        if (url.searchParams.has("room")) 
+        {
+            return url.searchParams.get("room").toLowerCase();
+        }
+        else
+        {
+            return Randomizer.getName().toLowerCase();
+        }
+    }
+
     public static function sendMessage(type: String, ?message: String = "")
     {
         trace("sending message type", type);
@@ -44,6 +58,7 @@ class NetworkingUtils {
             var messageBlob:Dynamic<String> = {};
             messageBlob.type = type;
             messageBlob.name = Registry.curGame.myName;
+            messageBlob.room = room;
             messageBlob.message = message;
             ws.send(Json.stringify(messageBlob));
         }

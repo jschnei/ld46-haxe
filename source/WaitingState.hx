@@ -13,6 +13,9 @@ import haxe.io.Eof;
 
 class WaitingState extends FlxState
 {
+    var _name_label:FlxText;
+    var _room_label:FlxText;
+
     var _lobby_users:FlxText;
     var _lobby_users_label:FlxText;
 
@@ -27,13 +30,23 @@ class WaitingState extends FlxState
         Registry.initializeGame();
 		Registry.initializeWordList();
         NetworkingUtils.initialize();
-        
-        _lobby_users_label = new FlxText(200, 150);
+
+        _name_label = new FlxText(200, 250);
+        _name_label.setFormat(AssetPaths.Action_Man__ttf, 30, FlxColor.ORANGE, FlxTextAlign.LEFT);
+        _name_label.text = "Name: " + Registry.curGame.myName;
+        add(_name_label);
+
+        _room_label = new FlxText(200, 300);
+        _room_label.setFormat(AssetPaths.Action_Man__ttf, 30, FlxColor.ORANGE, FlxTextAlign.LEFT);
+        _room_label.text = "Room: " + NetworkingUtils.room;
+        add(_room_label);
+
+        _lobby_users_label = new FlxText(200, 350);
         _lobby_users_label.setFormat(AssetPaths.Action_Man__ttf, 30, FlxColor.ORANGE, FlxTextAlign.LEFT);
         _lobby_users_label.text = "Players: ";
         add(_lobby_users_label);
 
-        _lobby_users = new FlxText(200, 200);
+        _lobby_users = new FlxText(200, 400);
         _lobby_users.setFormat(AssetPaths.Action_Man__ttf, 30, FlxColor.RED, FlxTextAlign.LEFT);
         add(_lobby_users);
 

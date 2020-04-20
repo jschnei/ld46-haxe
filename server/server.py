@@ -7,19 +7,20 @@ import json
 import logging
 import websockets
 
+from collections import defaultdict
+
 logging.basicConfig()
 
-BOARDS = {}
+SOCKETS = set()             # set of all open WebSocket objects
+SOCKET_TO_NAME = dict()     # mapping from WebSockets to names
+NAME_TO_SOCKET = dict()     # mapping from names to WebSockets
+NAME_TO_ROOM = dict()       # mapping from names to rooms
+ROOMS = defaultdict(list)      # ROOMS[room] contains a list of all players in the room
+BOARDS = defaultdict(str)     # BOARDS[name] is the board of player `name`
 
-USERS = set()
-SOCKET_TO_NAME = dict()
-NAME_TO_SOCKET = dict()
-
-STARTED = False
-
-def players_message():
+def players_message(room):
     return json.dumps({"type": "players", 
-                       "players": ",".join(list(NAME_TO_SOCKET.keys()))})
+                       "players": ",".join(ROOMS[room])})
 
 def join_message(name):
     return json.dumps({"type": "join", "name": name})
@@ -37,24 +38,34 @@ def start_message():
 
 async def notify_all(message):
     print("outgoing", message)
-    if USERS:
-        await asyncio.wait([user.send(message) for user in USERS])
+    if SOCKETS:
+        await asyncio.wait([user.send(message) for user in SOCKETS])
+
+async def notify_room(message, room):
+    print("outgoing", message)
+    room_sockets = [NAME_TO_SOCKET[name] for name in ROOMS[room]]
+    if room_sockets:
+        await asyncio.wait([user.send(message) for user in room_sockets])
 
 async def notify_user(message, user):
     print("outgoing", message)
     await asyncio.wait([user.send(message)])
 
 async def register(websocket):
-    USERS.add(websocket)
-    await notify_user(players_message(), websocket)
-
+    SOCKETS.add(websocket)
+    # await notify_user(players_message(), websocket)
 
 async def unregister(websocket):
-    name = SOCKET_TO_NAME[websocket]
-    USERS.remove(websocket)
+    SOCKETS.remove(websocket)
 
-    del SOCKET_TO_NAME[websocket]
-    del NAME_TO_SOCKET[name]
+    if websocket in SOCKET_TO_NAME:
+        name = SOCKET_TO_NAME[websocket]
+        del SOCKET_TO_NAME[websocket]
+        del NAME_TO_SOCKET[name]
+
+        room = NAME_TO_ROOM[name]
+        ROOMS[room].remove(name)
+        del NAME_TO_ROOM[name]
     
     await notify_all(leave_message(name))
 
@@ -64,28 +75,34 @@ async def counter(websocket, path):
     await register(websocket)
     try:
         async for message in websocket:
-            data = json.loads(message)
             print("incoming:", message)
-            if data["type"] == "word":
-                pass
-            elif data["type"] == "join":
+
+            try:
+                data = json.loads(message)
                 name = data["name"]
-                SOCKET_TO_NAME[websocket] = name
-                NAME_TO_SOCKET[name] = websocket
+                room = data["room"]
+                
+                if data["type"] == "word":
+                    pass
+                elif data["type"] == "join":                
+                    ROOMS[room].append(name)
+                    NAME_TO_ROOM[name] = room
 
-                await notify_all(join_message(name))
-            elif data["type"] == "start":
-                STARTED = True
-                await notify_all(start_message())
+                    SOCKET_TO_NAME[websocket] = name
+                    NAME_TO_SOCKET[name] = websocket
 
-            elif data["type"] == "sync":
-                name = data["name"]
-                board = data["message"]
+                    await notify_room(join_message(name), room)
+                    await notify_user(players_message(room), websocket)
+                elif data["type"] == "start":
+                    await notify_room(start_message(), room)
 
-                BOARDS[name] = board
-                await notify_all(sync_message(name, board))
-            else:
-                logging.error("unsupported event type: {}", data)
+                elif data["type"] == "sync":
+                    BOARDS[name] = board
+                    await notify_room(sync_message(name, board), room)
+                else:
+                    logging.error("unsupported event type: {}", data)
+            except e:
+                logging.error("error deserializing message: {}", e)
     finally:
         await unregister(websocket)
 
