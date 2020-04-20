@@ -62,6 +62,11 @@ class PlayState extends FlxState
 
 		if (!Registry.curGame.alive) return;
 
+		if (Registry.curGame.numRemainingPlayers() == 1 && Registry.curGame.startingPlayerCount > 1)
+		{
+			Registry.curGame.die();
+		}
+
         if(FlxG.mouse.pressed)
 		{
 			var dx = FlxG.mouse.x - _grid.x;
