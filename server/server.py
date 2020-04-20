@@ -90,7 +90,7 @@ async def counter(websocket, path):
         await unregister(websocket)
 
 
-start_server = websockets.serve(counter, "localhost", 9999)
+start_server = websockets.serve(counter, "0.0.0.0", 9999)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
