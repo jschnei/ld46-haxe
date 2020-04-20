@@ -2,8 +2,6 @@ package;
 
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
-import flixel.math.FlxPoint;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.text.FlxText;
@@ -47,6 +45,7 @@ class GridTile extends FlxSpriteGroup
                 } else{
                     // this block is stuck off the top
                     trace("oh no!");
+                    Registry.curGame.die();
                     velocity.y = 0;
                     falling = false;
                 }

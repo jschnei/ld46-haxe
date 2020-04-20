@@ -355,7 +355,7 @@ class Grid extends FlxSpriteGroup
                 if (y < numRows)
                 {
                     trace("uh oh!!! you are dead");
-                    
+                    Registry.curGame.die();
                 }
                 else
                 {

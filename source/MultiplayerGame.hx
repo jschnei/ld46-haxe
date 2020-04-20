@@ -96,13 +96,4 @@ class MultiplayerGame {
         return ret;
     }
 
-    public function getTrackedBoard():String
-    {
-        if (self.tracking != null) 
-        {
-            return self.tracking.board;
-        }
-        return "";
-    }
-
 }

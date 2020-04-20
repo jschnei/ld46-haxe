@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","100");
+		_this.setReserved("build","103");
 	} else {
-		_this.h["build"] = "100";
+		_this.h["build"] = "103";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -7922,6 +7922,9 @@ Grid.prototype = $extend(flixel_group_FlxTypedSpriteGroup.prototype,{
 	,mouseHeldX: null
 	,mouseHeldY: null
 	,update: function(elapsed) {
+		if(!Registry.curGame.alive) {
+			return;
+		}
 		this.totalTime += elapsed;
 		var _g = 0;
 		var _g1 = this.selectedPath;
@@ -8127,7 +8130,8 @@ Grid.prototype = $extend(flixel_group_FlxTypedSpriteGroup.prototype,{
 				}
 				var tileToMove = this.gridTiles[y * this.gridWidth + x];
 				if(y < numRows) {
-					haxe_Log.trace("uh oh!!! you are dead",{ fileName : "source/Grid.hx", lineNumber : 355, className : "Grid", methodName : "addRowsToBottom"});
+					haxe_Log.trace("uh oh!!! you are dead",{ fileName : "source/Grid.hx", lineNumber : 357, className : "Grid", methodName : "addRowsToBottom"});
+					Registry.curGame.die();
 				} else {
 					this.gridTiles[y * this.gridWidth + x] = null;
 					this.insertTile(tileToMove,x,y - numRows);
@@ -8147,14 +8151,14 @@ Grid.prototype = $extend(flixel_group_FlxTypedSpriteGroup.prototype,{
 		}
 	}
 	,logGridTiles: function() {
-		haxe_Log.trace("logging tiles",{ fileName : "source/Grid.hx", lineNumber : 372, className : "Grid", methodName : "logGridTiles"});
+		haxe_Log.trace("logging tiles",{ fileName : "source/Grid.hx", lineNumber : 375, className : "Grid", methodName : "logGridTiles"});
 		var _g = 0;
 		var _g1 = this.gridTiles;
 		while(_g < _g1.length) {
 			var gridTile = _g1[_g];
 			++_g;
 			if(gridTile != null) {
-				haxe_Log.trace("x: " + gridTile.gridX + ", y: " + gridTile.gridY + ", letter: " + gridTile.getLetter(),{ fileName : "source/Grid.hx", lineNumber : 376, className : "Grid", methodName : "logGridTiles"});
+				haxe_Log.trace("x: " + gridTile.gridX + ", y: " + gridTile.gridY + ", letter: " + gridTile.getLetter(),{ fileName : "source/Grid.hx", lineNumber : 379, className : "Grid", methodName : "logGridTiles"});
 			}
 		}
 	}
@@ -8206,6 +8210,7 @@ GridTile.prototype = $extend(flixel_group_FlxTypedSpriteGroup.prototype,{
 					this.grid.insertFallingTile(this,this.gridX,topTile - 1);
 				} else {
 					haxe_Log.trace("oh no!",{ fileName : "source/GridTile.hx", lineNumber : 49, className : "GridTile", methodName : "movement"});
+					Registry.curGame.die();
 					this.velocity.set_y(0);
 					this.falling = false;
 				}
@@ -8440,7 +8445,7 @@ ManifestResources.init = function(config) {
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$nokiafc22_$ttf);
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$monsterrat_$ttf);
 	var bundle;
-	var data = "{\"name\":null,\"assets\":\"aoy4:pathy27:assets%2Fdata%2Fenable1.txty4:sizei1743367y4:typey4:TEXTy2:idR1y7:preloadtgoR0y25:assets%2Fdata%2Fukacd.txtR2i1936592R3R4R5R7R6tgoR2i49408R3y4:FONTy9:classNamey35:__ASSET__assets_data_action_man_ttfR5y30:assets%2Fdata%2FAction_Man.ttfR6tgoR0y34:assets%2Fdata%2Fdata-goes-here.txtR2zR3R4R5R12R6tgoR2i5148R3y5:SOUNDR5y30:assets%2Fsounds%2Funselect.wavy9:pathGroupaR14hR6tgoR2i4910R3R13R5y28:assets%2Fsounds%2Fselect.oggR15aR16y28:assets%2Fsounds%2Fselect.wavhR6tgoR0y36:assets%2Fsounds%2Fsounds-go-here.txtR2zR3R4R5R18R6tgoR2i10188R3R13R5R17R15aR16R17hgoR2i37918R3R13R5y27:assets%2Fsounds%2Fclear.wavR15aR19hR6tgoR2i10188R3R13R5y29:assets%2Fsounds%2Fbadword.wavR15aR20hR6tgoR0y36:assets%2Fmusic%2Fmusic-goes-here.txtR2zR3R4R5R21R6tgoR2i39706R3y5:MUSICR5y28:flixel%2Fsounds%2Fflixel.mp3R15aR23y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i2114R3R22R5y26:flixel%2Fsounds%2Fbeep.mp3R15aR25y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i33629R3R13R5R24R15aR23R24hgoR2i5794R3R13R5R26R15aR25R26hgoR2i15744R3R8R9y35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R8R9y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3y5:IMAGER5R31R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R32R5R33R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
+	var data = "{\"name\":null,\"assets\":\"aoy4:pathy27:assets%2Fdata%2Fenable1.txty4:sizei1743371y4:typey4:TEXTy2:idR1y7:preloadtgoR0y25:assets%2Fdata%2Fukacd.txtR2i1936592R3R4R5R7R6tgoR2i49408R3y4:FONTy9:classNamey35:__ASSET__assets_data_action_man_ttfR5y30:assets%2Fdata%2FAction_Man.ttfR6tgoR0y34:assets%2Fdata%2Fdata-goes-here.txtR2zR3R4R5R12R6tgoR2i5148R3y5:SOUNDR5y30:assets%2Fsounds%2Funselect.wavy9:pathGroupaR14hR6tgoR2i4910R3R13R5y28:assets%2Fsounds%2Fselect.oggR15aR16y28:assets%2Fsounds%2Fselect.wavhR6tgoR0y36:assets%2Fsounds%2Fsounds-go-here.txtR2zR3R4R5R18R6tgoR2i10188R3R13R5R17R15aR16R17hgoR2i37918R3R13R5y27:assets%2Fsounds%2Fclear.wavR15aR19hR6tgoR2i10188R3R13R5y29:assets%2Fsounds%2Fbadword.wavR15aR20hR6tgoR2i7823692R3R13R5y34:assets%2Fmusic%2Fboggle_battle.wavR15aR21hR6tgoR0y36:assets%2Fmusic%2Fmusic-goes-here.txtR2zR3R4R5R22R6tgoR2i39706R3y5:MUSICR5y28:flixel%2Fsounds%2Fflixel.mp3R15aR24y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i2114R3R23R5y26:flixel%2Fsounds%2Fbeep.mp3R15aR26y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i33629R3R13R5R25R15aR24R25hgoR2i5794R3R13R5R27R15aR26R27hgoR2i15744R3R8R9y35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R8R9y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3y5:IMAGER5R32R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R33R5R34R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
 	var manifest = lime_utils_AssetManifest.parse(data,ManifestResources.rootPath);
 	var library = lime_utils_AssetLibrary.fromManifest(manifest);
 	lime_utils_Assets.registerLibrary("default",library);
@@ -8895,6 +8900,7 @@ MiniGrid.prototype = $extend(flixel_FlxSprite.prototype,{
 	,__class__: MiniGrid
 });
 var MultiplayerGame = function() {
+	this.alive = true;
 	this.started = false;
 	this.players = new haxe_ds_StringMap();
 	this.myName = Randomizer.getName();
@@ -8915,6 +8921,7 @@ MultiplayerGame.prototype = {
 	,myName: null
 	,self: null
 	,started: null
+	,alive: null
 	,addPlayer: function(playerName) {
 		if(playerName == "") {
 			return;
@@ -8931,7 +8938,21 @@ MultiplayerGame.prototype = {
 		}
 	}
 	,removePlayer: function(playerName) {
+		var _this = this.players;
+		var player = __map_reserved[playerName] != null ? _this.getReserved(playerName) : _this.h[playerName];
+		if(player != null) {
+			var prevPlayer = player.trackPrev;
+			var nextPlayer = player.trackNext;
+			if(prevPlayer != null && nextPlayer != null) {
+				prevPlayer.setTrackNext(nextPlayer);
+				nextPlayer.setTrackPrev(prevPlayer);
+			}
+		}
 		this.players.remove(playerName);
+	}
+	,die: function() {
+		this.alive = false;
+		NetworkingUtils.sendMessage("die");
 	}
 	,startGame: function() {
 		this.started = true;
@@ -8946,20 +8967,32 @@ MultiplayerGame.prototype = {
 			var tmp = __map_reserved[key] != null ? _this.getReserved(key) : _this.h[key];
 			var _this1 = this.players;
 			var key1 = playerNames[i - 1];
-			tmp.setTracking(__map_reserved[key1] != null ? _this1.getReserved(key1) : _this1.h[key1]);
+			tmp.setTrackPrev(__map_reserved[key1] != null ? _this1.getReserved(key1) : _this1.h[key1]);
+			var _this2 = this.players;
+			var key2 = playerNames[i - 1];
+			var tmp1 = __map_reserved[key2] != null ? _this2.getReserved(key2) : _this2.h[key2];
+			var _this3 = this.players;
+			var key3 = playerNames[i];
+			tmp1.setTrackNext(__map_reserved[key3] != null ? _this3.getReserved(key3) : _this3.h[key3]);
 		}
-		var _this2 = this.players;
-		var key2 = playerNames[0];
-		var tmp1 = __map_reserved[key2] != null ? _this2.getReserved(key2) : _this2.h[key2];
-		var key3 = playerNames[playerNames.length - 1];
-		var _this3 = this.players;
-		tmp1.setTracking(__map_reserved[key3] != null ? _this3.getReserved(key3) : _this3.h[key3]);
+		var _this4 = this.players;
+		var key4 = playerNames[0];
+		var tmp2 = __map_reserved[key4] != null ? _this4.getReserved(key4) : _this4.h[key4];
+		var key5 = playerNames[playerNames.length - 1];
+		var _this5 = this.players;
+		tmp2.setTrackPrev(__map_reserved[key5] != null ? _this5.getReserved(key5) : _this5.h[key5]);
+		var key6 = playerNames[playerNames.length - 1];
+		var _this6 = this.players;
+		var tmp3 = __map_reserved[key6] != null ? _this6.getReserved(key6) : _this6.h[key6];
+		var _this7 = this.players;
+		var key7 = playerNames[0];
+		tmp3.setTrackNext(__map_reserved[key7] != null ? _this7.getReserved(key7) : _this7.h[key7]);
 	}
 	,updateBoard: function(playerName,board) {
 		var _this = this.players;
 		var player = __map_reserved[playerName] != null ? _this.getReserved(playerName) : _this.h[playerName];
 		if(player == null) {
-			haxe_Log.trace("error: player does not exist",{ fileName : "source/MultiplayerGame.hx", lineNumber : 63, className : "MultiplayerGame", methodName : "updateBoard", customParams : [playerName]});
+			haxe_Log.trace("error: player does not exist",{ fileName : "source/MultiplayerGame.hx", lineNumber : 80, className : "MultiplayerGame", methodName : "updateBoard", customParams : [playerName]});
 			return;
 		}
 		player.board = board;
@@ -8972,12 +9005,6 @@ MultiplayerGame.prototype = {
 			ret.push(user1);
 		}
 		return ret;
-	}
-	,getTrackedBoard: function() {
-		if(this.self.tracking != null) {
-			return this.self.tracking.board;
-		}
-		return "";
 	}
 	,__class__: MultiplayerGame
 };
@@ -9730,7 +9757,7 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 		this.add(this._grid);
 		this.add(this._grid.currentWordText);
 		this._miniGrid = new MiniGrid(this,Registry.PLAYFIELD_WIDTH,Registry.PLAYFIELD_HEIGHT,-250,50);
-		this._miniGrid.trackPlayer(Registry.curGame.self.tracking);
+		this._miniGrid.trackPlayer(Registry.curGame.self.trackNext);
 		this.add(this._miniGrid);
 		var _this = flixel_FlxG.camera;
 		var point = new flixel_math_FlxPoint(Grid.CELL_WIDTH * this._grid.gridWidth / 2,Grid.CELL_HEIGHT * this._grid.gridHeight / 2);
@@ -9738,10 +9765,14 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 		if(point._weak) {
 			point.put();
 		}
+		flixel_FlxG.sound.playMusic("assets/music/boggle_battle.wav",.3);
 		flixel_FlxState.prototype.create.call(this);
 	}
 	,update: function(elapsed) {
 		flixel_FlxState.prototype.update.call(this,elapsed);
+		if(!Registry.curGame.alive) {
+			return;
+		}
 		var _this = flixel_FlxG.mouse._leftButton;
 		if(_this.current == 1 || _this.current == 2) {
 			var dx = flixel_FlxG.mouse.x - this._grid.x;
@@ -9767,7 +9798,6 @@ var PlayerInfo = function(name,self) {
 		self = false;
 	}
 	this.self = false;
-	this.alive = true;
 	this.name = name;
 	this.self = self;
 };
@@ -9776,15 +9806,20 @@ PlayerInfo.__name__ = "PlayerInfo";
 PlayerInfo.prototype = {
 	name: null
 	,board: null
-	,alive: null
 	,self: null
-	,tracking: null
+	,trackNext: null
+	,trackPrev: null
 	,setBoard: function(board) {
 		this.board = board;
 	}
-	,setTracking: function(tracking) {
-		if(tracking != this) {
-			this.tracking = tracking;
+	,setTrackNext: function(tracking) {
+		if(this.trackNext != this) {
+			this.trackNext = tracking;
+		}
+	}
+	,setTrackPrev: function(tracking) {
+		if(this.trackPrev != this) {
+			this.trackPrev = tracking;
 		}
 	}
 	,__class__: PlayerInfo
@@ -71057,7 +71092,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 62426;
+	this.version = 815833;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
@@ -119423,6 +119458,7 @@ AssetPaths.sounds_go_here__txt = "assets/sounds/sounds-go-here.txt";
 AssetPaths.select__wav = "assets/sounds/select.wav";
 AssetPaths.clear__wav = "assets/sounds/clear.wav";
 AssetPaths.badword__wav = "assets/sounds/badword.wav";
+AssetPaths.boggle_battle__wav = "assets/music/boggle_battle.wav";
 AssetPaths.music_goes_here__txt = "assets/music/music-goes-here.txt";
 flixel_math_FlxRect._pool = new flixel_util_FlxPool_$flixel_$math_$FlxRect(flixel_math_FlxRect);
 flixel_FlxObject.defaultPixelPerfectPosition = false;
