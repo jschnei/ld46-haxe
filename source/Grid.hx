@@ -104,7 +104,7 @@ class Grid extends FlxSpriteGroup
         }
 
         currentWordText.text = getCurrentWord();
-        currentWordText.y = mouseHeldY - 180;
+        currentWordText.y = mouseHeldY - 160;
         currentWordText.x = mouseHeldX - (currentWordText.width / 2);
 
         newTileTimer += elapsed;
