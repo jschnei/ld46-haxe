@@ -43,6 +43,7 @@ class PlayState extends FlxState
 
 		FlxG.camera.focusOn(new FlxPoint(Grid.CELL_WIDTH * _grid.gridWidth/2, Grid.CELL_HEIGHT * _grid.gridHeight/2));
 
+		FlxG.sound.playMusic(AssetPaths.boggle_battle__wav, .3);
 		super.create();
 	}	
 

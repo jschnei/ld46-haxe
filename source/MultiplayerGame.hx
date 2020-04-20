@@ -2,10 +2,6 @@
 import haxe.DynamicAccess;
 import haxe.Json;
 
-import js.html.MessageEvent;
-import js.html.WebSocket;
-
-
 class MultiplayerGame {
     public var players:Map<String, PlayerInfo>;
     public var myName:String;
