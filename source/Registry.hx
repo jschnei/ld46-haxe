@@ -28,6 +28,8 @@ class Registry
     public static var rand:Randomizer;
     public static var curGame:MultiplayerGame;
 
+    public static var name:String = "";
+
     public static function initializeGame()
     {
         if (curGame == null) 

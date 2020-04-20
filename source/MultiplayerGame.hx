@@ -15,7 +15,7 @@ class MultiplayerGame {
     {
         players = new Map<String, PlayerInfo>();
 
-        myName = Randomizer.getName();
+        myName = Registry.name;
         self = new PlayerInfo(myName, true);
 
         players.set(myName, self);
