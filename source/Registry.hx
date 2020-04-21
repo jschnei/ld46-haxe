@@ -6,8 +6,8 @@ import polygonal.ds.IntHashSet;
 
 class Registry
 {
-    // public static var SERVER_ADDRESS = "ws://slime.jschnei.com:9999/";
-    public static var SERVER_ADDRESS = "ws://localhost:9999/";
+    public static var SERVER_ADDRESS = "ws://slime.jschnei.com:9999/";
+    // public static var SERVER_ADDRESS = "ws://localhost:9999/";
 
     public static var PLAYFIELD_WIDTH = 5;
     public static var PLAYFIELD_HEIGHT = 10;
