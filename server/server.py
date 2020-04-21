@@ -76,7 +76,8 @@ async def unregister(websocket):
         await notify_all(leave_message(name))
 
 def remove_websocket(websocket):
-    SOCKETS.remove(websocket)
+    if websocket in SOCKETS:
+        SOCKETS.remove(websocket)
 
     if websocket in SOCKET_TO_NAME:
         name = SOCKET_TO_NAME[websocket]
