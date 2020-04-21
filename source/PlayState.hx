@@ -15,7 +15,8 @@ class PlayState extends FlxState
 {
 
 	public var _grid:Grid;
-	public var _miniGrid:MiniGrid;
+	public var _prevMiniGrid:MiniGrid;
+	public var _nextMiniGrid:MiniGrid;
 	public var _statusHud:StatusHUD;
     // var background:FlxBackdrop;
 	// public var currentControlMode:ControlMode.ControlMode;
@@ -37,11 +38,17 @@ class PlayState extends FlxState
 		add(_grid);
 		add(_grid.currentWordText);
 
-		_miniGrid = new MiniGrid(this, 
+		_prevMiniGrid = new MiniGrid(this, 
 								 Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT,
 								 -250, 50);
-		_miniGrid.trackPlayer(Registry.curGame.self.trackNext);
-		add(_miniGrid);
+		_prevMiniGrid.trackPlayer(Registry.curGame.self.trackPrev);
+		add(_prevMiniGrid);
+
+		_nextMiniGrid = new MiniGrid(this, 
+								 Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT,
+								 250 + Registry.PLAYFIELD_WIDTH*Registry.GRID_SIZE, 50);
+		_nextMiniGrid.trackPlayer(Registry.curGame.self.trackNext);
+		add(_nextMiniGrid);
 
 		_statusHud = new StatusHUD(400, 250);
 		add(_statusHud);
@@ -66,6 +73,9 @@ class PlayState extends FlxState
 		{
 			Registry.curGame.die();
 		}
+
+		_prevMiniGrid.trackPlayer(Registry.curGame.self.trackPrev);
+		_nextMiniGrid.trackPlayer(Registry.curGame.self.trackNext);
 
         if(FlxG.mouse.pressed)
 		{
