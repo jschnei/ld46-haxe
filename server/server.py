@@ -16,8 +16,9 @@ SOCKET_TO_NAME = dict()     # mapping from WebSockets to names
 NAME_TO_SOCKET = dict()     # mapping from names to WebSockets
 NAME_TO_ROOM = dict()       # mapping from names to rooms
 NICKNAMES = dict()          # mapping from names to nicknames
+ROOM_STATUS = dict()        # mapping from rooms to status
 ROOMS = defaultdict(list)      # ROOMS[room] contains a list of all players in the room
-BOARDS = defaultdict(str)     # BOARDS[name] is the board of player `name`
+BOARDS = defaultdict(str)      # BOARDS[name] is the board of player `name`
 
 def players_message(room):
     name_str = ','.join(ROOMS[room])
@@ -67,6 +68,14 @@ async def register(websocket):
     # await notify_user(players_message(), websocket)
 
 async def unregister(websocket):
+    name = SOCKET_TO_NAME.get(websocket)
+    remove_websocket(websocket)
+    # TODO: It seems like there's a potential issue if people in different rooms have the same name?
+
+    if name:
+        await notify_all(leave_message(name))
+
+def remove_websocket(websocket):
     SOCKETS.remove(websocket)
 
     if websocket in SOCKET_TO_NAME:
@@ -75,10 +84,20 @@ async def unregister(websocket):
         del NAME_TO_SOCKET[name]
 
         room = NAME_TO_ROOM[name]
-        ROOMS[room].remove(name)
+        if name in ROOMS[room]:
+            ROOMS[room].remove(name)
         del NAME_TO_ROOM[name]
-    # TODO: It seems like there's a potential issue if people in different rooms have the same name?
-    await notify_all(leave_message(name))
+
+def cleanup_room(room):
+    if room not in ROOM_STATUS:
+        return
+    
+    for player in ROOMS[room]:
+        socket = NAME_TO_SOCKET[player]
+        remove_websocket(websocket)
+
+    del ROOMS[room]
+    del ROOM_STATUS[room]
 
 
 async def counter(websocket, path):
@@ -96,20 +115,32 @@ async def counter(websocket, path):
                 if data["type"] == "word":
                     word = data['message']
                     await notify_room(word_message(name, word), room)
-                elif data["type"] == "join":     
-                    nickname = data["message"]
-                    NICKNAMES[name] = nickname
+                elif data["type"] == "join":  
+                    can_join = True
 
-                    ROOMS[room].append(name)
-                    NAME_TO_ROOM[name] = room
+                    if room not in ROOM_STATUS :
+                        ROOMS[room] = []
+                        ROOM_STATUS[room] = "created"
+                    elif ROOM_STATUS[room] != "created":
+                        print("cannot join, room already started")
+                        can_join = False
+                        # TODO (send error message to user)
 
-                    SOCKET_TO_NAME[websocket] = name
-                    NAME_TO_SOCKET[name] = websocket
+                    if can_join:
+                        nickname = data["message"]
+                        NICKNAMES[name] = nickname
 
-                    await notify_room(join_message(name), room)
-                    await notify_user(players_message(room), websocket)
+                        ROOMS[room].append(name)
+                        NAME_TO_ROOM[name] = room
+
+                        SOCKET_TO_NAME[websocket] = name
+                        NAME_TO_SOCKET[name] = websocket
+
+                        await notify_room(join_message(name), room)
+                        await notify_user(players_message(room), websocket)
                 elif data["type"] == "start":
                     await notify_room(start_message(), room)
+                    ROOM_STATUS[room] = "started"
 
                 elif data["type"] == "sync":
                     board = data['message']
@@ -117,6 +148,8 @@ async def counter(websocket, path):
                     await notify_room(sync_message(name, board), room)
                 elif data["type"] == "die":
                     await notify_room(leave_message(name), room)
+                elif data["type"] == "end":
+                    cleanup_room(room)
                 else:
                     logging.error("unsupported event type: {}", data)
             except Exception as e:

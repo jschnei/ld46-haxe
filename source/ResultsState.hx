@@ -40,5 +40,7 @@ class ResultsState extends FlxState
         resultsText.x = (FlxG.width - resultsText.width) / 2;
         resultsText.y = 200;
         add(resultsText);
+
+        NetworkingUtils.sendMessage("end");
     }
 }
