@@ -33,7 +33,8 @@ class ResultsState extends FlxState
             var player = Registry.curGame.deadPlayers[Registry.curGame.startingPlayerCount - i - 1];
             if (i > 0)
                 resultsStr += "\n";
-            resultsStr += (i+1) + ". " + player.nickname;
+            if (player != null)
+                resultsStr += (i+1) + ". " + player.nickname;
         }
         resultsText.text = resultsStr;
         resultsText.x = (FlxG.width - resultsText.width) / 2;
