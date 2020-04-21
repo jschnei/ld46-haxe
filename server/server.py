@@ -94,7 +94,7 @@ def cleanup_room(room):
     
     for player in ROOMS[room]:
         socket = NAME_TO_SOCKET[player]
-        remove_websocket(websocket)
+        remove_websocket(socket)
 
     del ROOMS[room]
     del ROOM_STATUS[room]
