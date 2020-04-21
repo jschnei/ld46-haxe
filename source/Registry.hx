@@ -28,7 +28,7 @@ class Registry
     public static var rand:Randomizer;
     public static var curGame:MultiplayerGame;
 
-    public static var name:String = "";
+    public static var nickname:String = "";
 
     public static function initializeGame()
     {

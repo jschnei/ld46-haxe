@@ -98,7 +98,7 @@ class MiniGrid extends FlxSpriteGroup
         }
         if (tracking != null)
         {
-            usernameText.text = tracking.name;
+            usernameText.text = tracking.nickname;
             usernameText.x = this.x + (gridWidth*CELL_WIDTH - usernameText.width) / 2;
         }
         super.update(elapsed);
