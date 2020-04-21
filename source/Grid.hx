@@ -91,7 +91,7 @@ class Grid extends FlxSpriteGroup
         badWordSound = FlxG.sound.load(AssetPaths.badword__wav, .5);
 
         currentWordText = new FlxText(gridWidth*CELL_WIDTH+10, gridHeight*CELL_HEIGHT/2);
-        currentWordText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
+        currentWordText.setFormat(AssetPaths.Fira_Bold__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
         // currentWordText is being added in PlayState so it can appear above the grid, sorry for hack
     }
 
