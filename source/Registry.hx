@@ -6,8 +6,8 @@ import polygonal.ds.IntHashSet;
 
 class Registry
 {
-    // public static var SERVER_ADDRESS = "ws://slime.jschnei.com:9999/";
-    public static var SERVER_ADDRESS = "ws://localhost:9999/";
+    public static var SERVER_ADDRESS = "ws://slime.jschnei.com:9999/";
+    // public static var SERVER_ADDRESS = "ws://localhost:9999/";
 
     public static var PLAYFIELD_WIDTH = 5;
     public static var PLAYFIELD_HEIGHT = 10;
@@ -18,10 +18,10 @@ class Registry
     public static var TILE_PERIOD = 1;
 
     // # of blocks per second initially
-    public static var START_FREQ = 2;
+    public static var START_FREQ = .5;
     // Current frequency is START_FREQ+(time elapsed in seconds)*FREQ_SCALING.
     // See Grid.update for details.
-    public static var FREQ_SCALING = .01;
+    public static var FREQ_SCALING = .005;
 
     public static var WORD_LIST:Array<String>;
 

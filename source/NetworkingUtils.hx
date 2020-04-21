@@ -67,10 +67,10 @@ class NetworkingUtils {
     public static function onMessage(message:MessageEvent)
     {
         // trace('message from server!');
-        trace(message.data);
+        // trace(message.data);
         var messageObject = Json.parse(message.data);
 
-        trace("incoming message type", messageObject.type);
+        // trace("incoming message type", messageObject.type);
 
         switch (messageObject.type)
         {
@@ -84,7 +84,8 @@ class NetworkingUtils {
                 processStartMessage(messageObject);
             case "players":
                 processPlayersMessage(messageObject);
-            
+            case "word":
+                processWordMessage(messageObject);
         }
     }
 
@@ -123,5 +124,12 @@ class NetworkingUtils {
         Registry.curGame.updateBoard(playerName, board);
     }
 
+    public static function processWordMessage(message:Dynamic)
+    {
+        var playerName:String = message.name;
+        var word:String = message.word;
+
+        Registry.curGame.processWord(playerName, word);
+    }
 
 }

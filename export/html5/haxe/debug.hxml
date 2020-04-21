@@ -16,6 +16,8 @@
 -D polygonal-ds=2.1.1
 -cp /home/jon/haxelib/haxe-ws/1,0,5/src
 -D haxe-ws=1.0.5
+-cp /home/jon/haxelib/flixel-ui/2,3,2
+-D flixel-ui=2.3.2
 -cp source
 -D tools=7.7.0
 -D lime-canvas
