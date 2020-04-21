@@ -36,6 +36,11 @@ def sync_message(name, board):
 def start_message():
     return json.dumps({"type": "start"})
 
+def word_message(name, word):
+    return json.dumps({"type": "word", 
+                       "name": name,
+                       "word": word})
+
 async def notify_all(message):
     print("outgoing", message)
     if SOCKETS:
@@ -83,7 +88,8 @@ async def counter(websocket, path):
                 room = data["room"]
                 
                 if data["type"] == "word":
-                    pass
+                    word = data['message']
+                    await notify_room(word_message(name, word), room)
                 elif data["type"] == "join":                
                     ROOMS[room].append(name)
                     NAME_TO_ROOM[name] = room

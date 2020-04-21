@@ -3,6 +3,8 @@ import haxe.DynamicAccess;
 import haxe.Json;
 
 class MultiplayerGame {
+    public var grid:Grid;
+
     public var startingPlayerCount:Int = 0;
     public var players:Map<String, PlayerInfo>;
     // Ordered by time of death.
@@ -23,6 +25,11 @@ class MultiplayerGame {
         self = new PlayerInfo(myName, true);
 
         players.set(myName, self);
+    }
+
+    public function setGrid(grid:Grid)
+    {
+        this.grid = grid;
     }
 
     public function addPlayer(playerName:String)
@@ -87,17 +94,42 @@ class MultiplayerGame {
     }
 
     public function updateBoard(playerName:String, board:String)
+    {
+        var player:PlayerInfo = players.get(playerName);
+
+        if (player == null)
         {
-            var player:PlayerInfo = players.get(playerName);
-    
-            if (player == null)
-            {
-                trace("error: player does not exist", playerName);
-                return;
-            }
-    
-            player.board = board;
+            // trace("error: player does not exist", playerName);
+            return;
         }
+
+        player.board = board;
+    }
+
+    public function processWord(playerName:String, word:String)
+    {
+        var player:PlayerInfo = players.get(playerName);
+
+        trace("PROCESSING WORD", playerName, word);
+
+        if (player == null)
+        {
+            trace("error: player does not exist", playerName);
+            return;
+        }
+
+        if (player.trackNext == self)
+        {
+            trace("ATTACK!");
+            if (word.length >= 5)
+            {
+                if (grid != null)
+                {
+                    grid.addRowsToBottom(word.length - 4);
+                }
+            }
+        }
+    }
     
 
     public function getCurrentPlayers():Array<String>

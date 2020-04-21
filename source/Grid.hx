@@ -95,6 +95,8 @@ class Grid extends FlxSpriteGroup
         currentWordText = new FlxText(gridWidth*CELL_WIDTH+10, gridHeight*CELL_HEIGHT/2);
         currentWordText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
         // currentWordText is being added in PlayState so it can appear above the grid, sorry for hack
+
+        Registry.curGame.setGrid(this);
     }
 
     override public function update(elapsed:Float):Void
@@ -321,7 +323,7 @@ class Grid extends FlxSpriteGroup
         var word = getCurrentWord().toLowerCase();
         if (Registry.isWord(word))
         {
-            // NetworkingUtils.sendMessage("word", word);
+            NetworkingUtils.sendMessage("word", word);
             for (gridTile in selectedPath)
             {
                 removeTile(gridTile);
