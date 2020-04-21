@@ -89,16 +89,15 @@ class PlayState extends FlxState
 			_grid.clearSelectedPath();
 		}
 
-		if (FlxG.keys.justPressed.X)
-		{
-			_grid.addRowsToBottom(1);
-		}
+		// if (FlxG.keys.justPressed.X)
+		// {
+		// 	_grid.addRowsToBottom(1);
+		// }
 
-		if (FlxG.keys.justPressed.L)
-		{
-			_grid.logGridTiles();
-		}
-
+		// if (FlxG.keys.justPressed.L)
+		// {
+		// 	_grid.logGridTiles();
+		// }
 	}
 
 
