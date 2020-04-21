@@ -18,6 +18,7 @@ class PlayState extends FlxState
 	public var _prevMiniGrid:MiniGrid;
 	public var _nextMiniGrid:MiniGrid;
 	public var _statusHud:StatusHUD;
+	public var _youDiedText:FlxText;
     // var background:FlxBackdrop;
 	// public var currentControlMode:ControlMode.ControlMode;
 	// public var topControlMode:ControlMode.SelectionControlMode;
@@ -46,12 +47,20 @@ class PlayState extends FlxState
 
 		_nextMiniGrid = new MiniGrid(this, 
 								 Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT,
-								 250 + Registry.PLAYFIELD_WIDTH*Registry.GRID_SIZE, 50);
+								 200 + Registry.PLAYFIELD_WIDTH*Registry.GRID_SIZE, 50);
 		_nextMiniGrid.trackPlayer(Registry.curGame.self.trackNext);
 		add(_nextMiniGrid);
 
 		_statusHud = new StatusHUD(400, 250);
 		add(_statusHud);
+
+		_youDiedText = new FlxText();
+		_youDiedText.setFormat(AssetPaths.Fira_Bold__ttf, 20, FlxColor.ORANGE, FlxTextAlign.LEFT);
+		_youDiedText.text = "You lost! Waiting for remaining players to finish...";
+		_youDiedText.x =  -_youDiedText.width/2 + 100;
+		_youDiedText.y = -20;
+		_youDiedText.visible = false;
+		add(_youDiedText);
 
 		FlxG.camera.focusOn(new FlxPoint(Grid.CELL_WIDTH * _grid.gridWidth/2, Grid.CELL_HEIGHT * _grid.gridHeight/2));
 
@@ -67,7 +76,11 @@ class PlayState extends FlxState
 		if (Registry.curGame.numRemainingPlayers() == 0)
 			FlxG.switchState(new ResultsState());
 
-		if (!Registry.curGame.alive) return;
+		if (!Registry.curGame.alive)
+		{
+			_youDiedText.visible = true;
+			return;
+		}
 
 		if (Registry.curGame.numRemainingPlayers() == 1 && Registry.curGame.startingPlayerCount > 1)
 		{
