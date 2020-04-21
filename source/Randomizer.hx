@@ -7,11 +7,11 @@ class Randomizer
     public static var rand:FlxRandom;
 
     public static var NAME_LENGTH = 8;
-    public static var COLUMN_FREQS:Array<Int> = [0, 0, 0, 0, 0,
-                                                1, 1, 1, 1, 1, 1, 1, 
-                                                2, 2, 2, 2, 2, 2, 2,
-                                                3, 3, 3, 3, 3, 3, 3,
-                                                4, 4 ,4, 4, 4];
+    public static var COLUMN_FREQS:Array<Int> = [0, 0, 0, 0,
+                                                1, 1, 1, 1, 1, 1,
+                                                2, 2, 2, 2, 2, 2,
+                                                3, 3, 3, 3, 3, 3,
+                                                4, 4 ,4, 4];
     static var currentBag_:Array<Int>;
 
     public static function initialize()
