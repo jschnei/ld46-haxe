@@ -31,9 +31,7 @@ class WaitingState extends FlxState
         Registry.initializeGame();
         Registry.initializeWordList();
         
-        trace("waiting...");
         NetworkingUtils.initialize();
-        trace("waited");
 
         _name_label = new FlxText(200, 250);
         _name_label.setFormat(AssetPaths.Action_Man__ttf, 30, FlxColor.ORANGE, FlxTextAlign.LEFT);
@@ -81,7 +79,7 @@ class WaitingState extends FlxState
 
     public function updateLobbyText()
     {
-        var users:Array<String> = Registry.curGame.getCurrentPlayers();
+        var users:Array<String> = Registry.curGame.getCurrentPlayerNicknames();
         _lobby_users.text = users.join("\n");
     }
 

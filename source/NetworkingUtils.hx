@@ -23,7 +23,7 @@ class NetworkingUtils {
         ws.onopen = function() 
         {
             trace('open!');
-            sendMessage("join");
+            sendMessage("join", Registry.curGame.myNickname);
         };
         
         ws.onclose = function() 
@@ -92,8 +92,9 @@ class NetworkingUtils {
     public static function processJoinMessage(message:Dynamic)
     {
         var playerName:String = message.name;
+        var playerNickname:String = message.nickname;
 
-        Registry.curGame.addPlayer(playerName);
+        Registry.curGame.addPlayer(playerName, playerNickname);
     }
 
     public static function processLeaveMessage(message:Dynamic)
@@ -110,9 +111,13 @@ class NetworkingUtils {
     public static function processPlayersMessage(message:Dynamic)
     {
         var existingPlayers:Array<String> = message.players.split(",");
-        for (playerName in existingPlayers)
+        var existingNicknames:Array<String> = message.nicknames.split(",");
+
+        var numPlayers = existingPlayers.length;
+
+        for (i in 0...numPlayers)
         {
-            Registry.curGame.addPlayer(playerName);
+            Registry.curGame.addPlayer(existingPlayers[i], existingNicknames[i]);
         }
     }
 

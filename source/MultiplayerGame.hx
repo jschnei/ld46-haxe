@@ -10,6 +10,7 @@ class MultiplayerGame {
     // Ordered by time of death.
     public var deadPlayers:Array<PlayerInfo>;
     public var myName:String;
+    public var myNickname:String;
 
     public var self:PlayerInfo;
 
@@ -21,8 +22,9 @@ class MultiplayerGame {
         players = new Map<String, PlayerInfo>();
         deadPlayers = new Array<PlayerInfo>();
 
-        myName = Registry.name;
-        self = new PlayerInfo(myName, true);
+        myNickname = Registry.nickname;
+        myName = Randomizer.getName();
+        self = new PlayerInfo(myName, myNickname, true);
 
         players.set(myName, self);
     }
@@ -32,13 +34,13 @@ class MultiplayerGame {
         this.grid = grid;
     }
 
-    public function addPlayer(playerName:String)
+    public function addPlayer(playerName:String, ?playerNickname:String="")
     {
         if (playerName == "") return;
 
         if (!players.exists(playerName) && !started)
         {
-            var player:PlayerInfo = new PlayerInfo(playerName);
+            var player:PlayerInfo = new PlayerInfo(playerName, playerNickname);
             players.set(playerName, player);
         }
     }
@@ -81,7 +83,7 @@ class MultiplayerGame {
     {
         started = true;
         // order the players and set tracking
-        var playerNames:Array<String> = getCurrentPlayers();
+        var playerNames:Array<String> = getCurrentPlayerNames();
         startingPlayerCount = playerNames.length;
         playerNames.sort(Reflect.compare);
 
@@ -132,12 +134,23 @@ class MultiplayerGame {
     }
     
 
-    public function getCurrentPlayers():Array<String>
+    public function getCurrentPlayerNames():Array<String>
     {
         var ret:Array<String> = new Array<String>();
-        for (user in players.keys())
+        for (playerName in players.keys())
         {
-            ret.push(user);
+            ret.push(playerName);
+        }
+
+        return ret;
+    }
+
+    public function getCurrentPlayerNicknames():Array<String>
+    {
+        var ret:Array<String> = new Array<String>();
+        for (playerName in players.keys())
+        {
+            ret.push(players[playerName].nickname);
         }
 
         return ret;

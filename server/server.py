@@ -15,15 +15,21 @@ SOCKETS = set()             # set of all open WebSocket objects
 SOCKET_TO_NAME = dict()     # mapping from WebSockets to names
 NAME_TO_SOCKET = dict()     # mapping from names to WebSockets
 NAME_TO_ROOM = dict()       # mapping from names to rooms
+NICKNAMES = dict()          # mapping from names to nicknames
 ROOMS = defaultdict(list)      # ROOMS[room] contains a list of all players in the room
 BOARDS = defaultdict(str)     # BOARDS[name] is the board of player `name`
 
 def players_message(room):
+    name_str = ','.join(ROOMS[room])
+    nickname_str = ','.join(NICKNAMES[name] for name in ROOMS[room])
     return json.dumps({"type": "players", 
-                       "players": ",".join(ROOMS[room])})
+                       "players": name_str,
+                       "nicknames": nickname_str})
 
 def join_message(name):
-    return json.dumps({"type": "join", "name": name})
+    return json.dumps({"type": "join", 
+                       "name": name,
+                       "nickname": NICKNAMES[name]})
 
 def leave_message(name):
     return json.dumps({"type": "leave", "name": name})
@@ -90,7 +96,10 @@ async def counter(websocket, path):
                 if data["type"] == "word":
                     word = data['message']
                     await notify_room(word_message(name, word), room)
-                elif data["type"] == "join":                
+                elif data["type"] == "join":     
+                    nickname = data["message"]
+                    NICKNAMES[name] = nickname
+
                     ROOMS[room].append(name)
                     NAME_TO_ROOM[name] = room
 

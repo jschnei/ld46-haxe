@@ -43,6 +43,6 @@ class NameState extends FlxState
     }
 
     public function updateString(oldString:String, newString:String) {
-        Registry.name = oldString;
+        Registry.nickname = oldString;
     }
 }
