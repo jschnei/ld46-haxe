@@ -45,6 +45,7 @@ class Grid extends FlxSpriteGroup
     public var unselectSound:FlxSound;
     public var clearSound:FlxSound;
     public var badWordSound:FlxSound;
+    public var attackedSound:FlxSound;
 
     // Coordinates of the last held mouse location. 
     public var mouseHeldX:Float = 0;
@@ -89,6 +90,7 @@ class Grid extends FlxSpriteGroup
         unselectSound = FlxG.sound.load(AssetPaths.unselect__wav);
         clearSound = FlxG.sound.load(AssetPaths.clear__wav, .1);
         badWordSound = FlxG.sound.load(AssetPaths.badword__wav, .5);
+        attackedSound = FlxG.sound.load(AssetPaths.attacked__wav, .1);
 
         currentWordText = new FlxText(gridWidth*CELL_WIDTH+10, gridHeight*CELL_HEIGHT/2);
         currentWordText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
@@ -344,6 +346,7 @@ class Grid extends FlxSpriteGroup
 
     public function addRowsToBottom(numRows:Int)
     {
+        attackedSound.play();
         // Move all existing tiles up numRows rows.
         for (x in 0...gridWidth)
         {
