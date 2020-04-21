@@ -47,11 +47,11 @@ class PlayState extends FlxState
 
 		_nextMiniGrid = new MiniGrid(this, 
 								 Registry.PLAYFIELD_WIDTH, Registry.PLAYFIELD_HEIGHT,
-								 200 + Registry.PLAYFIELD_WIDTH*Registry.GRID_SIZE, 50);
+								 160 + Registry.PLAYFIELD_WIDTH*Registry.GRID_SIZE, 50);
 		_nextMiniGrid.trackPlayer(Registry.curGame.self.trackNext);
 		add(_nextMiniGrid);
 
-		_statusHud = new StatusHUD(400, 250);
+		_statusHud = new StatusHUD(370, 450);
 		add(_statusHud);
 
 		_youDiedText = new FlxText();
