@@ -57,8 +57,8 @@ class PlayState extends FlxState
 		_youDiedText = new FlxText();
 		_youDiedText.setFormat(AssetPaths.Fira_Bold__ttf, 20, FlxColor.ORANGE, FlxTextAlign.LEFT);
 		_youDiedText.text = "You lost! Waiting for remaining players to finish...";
-		_youDiedText.x =  -_youDiedText.width/2 + 100;
-		_youDiedText.y = -20;
+		_youDiedText.x =  -_youDiedText.width/2 + 125;
+		_youDiedText.y = -30;
 		_youDiedText.visible = false;
 		add(_youDiedText);
 
