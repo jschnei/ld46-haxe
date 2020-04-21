@@ -35,7 +35,7 @@ class WaitingState extends FlxState
 
         _name_label = new FlxText(200, 250);
         _name_label.setFormat(AssetPaths.Fira_Bold__ttf, 30, FlxColor.ORANGE, FlxTextAlign.LEFT);
-        _name_label.text = "Name: " + Registry.curGame.myName;
+        _name_label.text = "Name: " + Registry.curGame.myNickname;
         add(_name_label);
 
         _room_label = new FlxText(200, 300);
