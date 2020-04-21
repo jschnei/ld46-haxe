@@ -26,7 +26,7 @@ class NameState extends FlxState
         add(_name_label);
 
         instructionText = new FlxText(200, 200);
-        instructionText.setFormat(AssetPaths.Action_Man__ttf, 30, FlxColor.ORANGE);
+        instructionText.setFormat(AssetPaths.Fira_Bold__ttf, 30, FlxColor.ORANGE);
         instructionText.text = "Enter your nickname:";
         add(instructionText);
 		super.create();

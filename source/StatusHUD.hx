@@ -13,7 +13,7 @@ class StatusHUD extends FlxSpriteGroup
         super(X, Y);
 
         deadCountText = new FlxText();
-        deadCountText.setFormat(AssetPaths.Action_Man__ttf, 20, FlxColor.WHITE, FlxTextAlign.CENTER);
+        deadCountText.setFormat(AssetPaths.Fira_Bold__ttf, 20, FlxColor.WHITE, FlxTextAlign.CENTER);
         add(deadCountText);
     }
 

@@ -74,7 +74,7 @@ class MiniGrid extends FlxSpriteGroup
         updateBoard(emptyBoardString);
 
         usernameText = new FlxText(0, gridHeight*CELL_HEIGHT + 20);
-        usernameText.setFormat(AssetPaths.Action_Man__ttf, 20, FlxColor.RED, FlxTextAlign.CENTER);
+        usernameText.setFormat(AssetPaths.Fira_Bold__ttf, 20, FlxColor.RED, FlxTextAlign.CENTER);
         add(usernameText);
     }
 

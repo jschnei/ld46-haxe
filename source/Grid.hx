@@ -93,7 +93,7 @@ class Grid extends FlxSpriteGroup
         attackedSound = FlxG.sound.load(AssetPaths.attacked__wav, .1);
 
         currentWordText = new FlxText(gridWidth*CELL_WIDTH+10, gridHeight*CELL_HEIGHT/2);
-        currentWordText.setFormat(AssetPaths.Action_Man__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
+        currentWordText.setFormat(AssetPaths.Fira_Bold__ttf, 90, FlxColor.RED, FlxTextAlign.CENTER);
         // currentWordText is being added in PlayState so it can appear above the grid, sorry for hack
 
         Registry.curGame.setGrid(this);

@@ -82,8 +82,8 @@ class LetterTile extends GridTile
         FlxSpriteUtil.drawRoundRect(letterTileSprite, 0, 0, Grid.CELL_WIDTH, Grid.CELL_HEIGHT, 10, 10, FlxColor.fromRGB(0,255,255,255));
         FlxSpriteUtil.drawRoundRect(letterTileSprite, 4, 4, Grid.CELL_WIDTH-8, Grid.CELL_HEIGHT-8, 10, 10, FlxColor.fromRGB(0,200,200,255));
         add(letterTileSprite);
-        letterText = new FlxText(7, 5, 0, letter);
-        letterText.setFormat(AssetPaths.Action_Man__ttf, 70, FlxColor.BLACK, FlxTextAlign.CENTER);
+        letterText = new FlxText(12, -3, 0, letter);
+        letterText.setFormat(AssetPaths.Fira_Bold__ttf, 56, FlxColor.BLACK, FlxTextAlign.CENTER);
         letterText.width = Grid.CELL_WIDTH;
         add(letterText);
         
