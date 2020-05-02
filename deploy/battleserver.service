@@ -1,0 +1,15 @@
+[Unit]
+Description=Boggle Battle Server
+
+[Service]
+ExecStart=/usr/bin/python3.6 server.py
+
+WorkingDirectory=/srv/ld46-haxe/server/
+
+User=root
+Group=root
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
